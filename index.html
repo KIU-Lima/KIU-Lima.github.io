@@ -25,7 +25,7 @@
     .kiu-filt:hover { color: #1d1d1f !important; }
 
     /* ===== Responsive (móvil / tablet) ===== */
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       /* nav compacta: logo + buscador + EN + carrito */
       .kiu-nav-in { padding: 0 14px !important; gap: 10px !important; }
       .kiu-logo { font-size: 22px !important; }
@@ -476,7 +476,7 @@ class Component extends DCLogic {
     // destino: el visor principal de la página de producto (elemento compartido)
     const vw = window.innerWidth;
     let target;
-    if (vw <= 900) {
+    if (vw <= 980) {
       // móvil: el visor va a ancho completo (sección 14px + tarjeta 14px) y es cuadrado
       const w = vw - 2 * (14 + 14);
       target = { top: 150, left: 28, w: w, h: w };
