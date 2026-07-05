@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <script src="./image-slot.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #ffffff; }
+    @keyframes kiuFadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+    @keyframes kiuLbBg { from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); } to { background: rgba(0,0,0,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); } }
+    @keyframes kiuLbImg { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: scale(1); } }
+    @keyframes kiuPress { 0% { transform: scale(1); } 45% { transform: scale(1.07); } 100% { transform: scale(0.93); } }
+    image-slot { display: block; width: 100%; height: 100%; }
+    .kiu-hov:hover { color: #0071e3 !important; }
+    .kiu-badge:hover { background: #0071e3 !important; }
+    .kiu-filt { transition: color 0.2s ease; }
+    .kiu-filt:hover { color: #1d1d1f !important; }
+  </style>
+</helmet>
+
+<div style="font-family: 'DM Sans', sans-serif; color: #1d1d1f; background: #ffffff; min-height: 100vh;">
+
+  <!-- PRODUCT LIFT OVERLAY -->
+  <sc-if value="{{ selVisible }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 65; background: rgba(255,255,255,0.55); backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3); opacity: {{ selBackdrop }}; transition: opacity 0.55s ease;"></div>
+    <div style="position: fixed; z-index: 70; overflow: hidden; background: #f5f5f7; top: {{ selTop }}; left: {{ selLeft }}; width: {{ selW }}; height: {{ selH }}; border-radius: 16px; opacity: {{ selOpacity }}; animation: kiuPress 0.62s cubic-bezier(0.34, 1.2, 0.64, 1) both; transition: opacity 0.4s ease; display: flex; flex-direction: column; box-shadow: {{ selShadow }};">
+      <div style="flex: 1; min-height: 0;">
+        <image-slot id="{{ selImgId }}" src="{{ selSrc }}" shape="rect" placeholder="{{ selName }}" style="width: 100%; height: 100%; display: block;"></image-slot>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- WHITE TRANSITION LAYER -->
+  <div style="position: fixed; inset: 0; z-index: 90; background: #ffffff; opacity: {{ whiteOpacity }}; pointer-events: {{ whitePointer }}; transition: opacity 0.42s ease;"></div>
+
+  <!-- BLUR OVERLAY -->
+  <div onMouseEnter="{{ closeNow }}" style="position: fixed; inset: 0; z-index: 30; background: rgba(255,255,255,0.45); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); opacity: {{ overlayOpacity }}; pointer-events: {{ overlayPointer }}; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+
+  <!-- CARRITO (selección de productos → checkout Shopify) -->
+  <div onClick="{{ closeCart }}" style="position: fixed; inset: 0; z-index: 105; background: rgba(29,29,31,0.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: {{ cartBackdropOpacity }}; pointer-events: {{ cartBackdropPointer }}; transition: opacity 0.45s ease;"></div>
+  <aside style="position: fixed; top: 0; right: 0; bottom: 0; z-index: 110; width: 400px; max-width: 92vw; background: #ffffff; border-left: 1px solid rgba(0,0,0,0.08); box-shadow: -24px 0 70px rgba(0,0,0,0.14); transform: translateX({{ cartShift }}); transition: transform 0.55s cubic-bezier(0.33, 1, 0.5, 1); display: flex; flex-direction: column;">
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px 26px; border-bottom: 1px solid rgba(0,0,0,0.08);">
+      <span style="font-size: 19px; font-weight: 600; color: #1d1d1f;">{{ cartTitle }}</span>
+      <button onClick="{{ closeCart }}" style="font-family: 'DM Sans', sans-serif; width: 32px; height: 32px; border: none; border-radius: 999px; background: #f5f5f7; color: #1d1d1f; font-size: 14px; cursor: pointer; transition: background 0.25s ease;" style-hover="background: rgba(0,0,0,0.1);">✕</button>
+    </div>
+    <sc-if value="{{ cartEmpty }}" hint-placeholder-val="{{ true }}">
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 0 36px; text-align: center;">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#c7c7cc" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l1.2 13H4.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        <span style="font-size: 16px; font-weight: 600; color: #1d1d1f; margin-top: 6px;">{{ cartEmptyMsg }}</span>
+        <span style="font-size: 13.5px; line-height: 1.5; color: #86868b;">{{ cartEmptySub }}</span>
+        <button onClick="{{ closeCart }}" style="font-family: 'DM Sans', sans-serif; margin-top: 10px; font-size: 13.5px; font-weight: 600; padding: 10px 22px; background: rgba(0,113,227,0.1); color: #0071e3; border: none; border-radius: 999px; cursor: pointer; transition: background 0.25s ease;" style-hover="background: rgba(0,113,227,0.18);">{{ cartKeep }}</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ cartHasItems }}" hint-placeholder-val="{{ false }}">
+      <div style="flex: 1; overflow-y: auto; padding: 6px 26px;">
+        <sc-for list="{{ cartRows }}" as="c" hint-placeholder-count="2">
+          <div style="display: flex; gap: 14px; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,0.07);">
+            <img src="{{ c.img }}" alt="{{ c.name }}" style="width: 62px; height: 62px; border-radius: 12px; object-fit: cover; border: 1px solid rgba(0,0,0,0.08); flex: none;">
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;">
+              <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f; line-height: 1.3;">{{ c.name }}</span>
+              <span style="font-size: 12.5px; color: #86868b;">{{ c.unit }}</span>
+              <div style="display: flex; align-items: center; gap: 12px; margin-top: 4px;">
+                <div style="display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(0,0,0,0.15); border-radius: 999px; padding: 3px 8px;">
+                  <button onClick="{{ c.dec }}" style="font-family: 'DM Sans', sans-serif; width: 20px; height: 20px; border: none; background: transparent; color: #1d1d1f; font-size: 14px; cursor: pointer; line-height: 1;">−</button>
+                  <span style="font-size: 13px; font-weight: 600; color: #1d1d1f; min-width: 14px; text-align: center;">{{ c.qty }}</span>
+                  <button onClick="{{ c.inc }}" style="font-family: 'DM Sans', sans-serif; width: 20px; height: 20px; border: none; background: transparent; color: #1d1d1f; font-size: 14px; cursor: pointer; line-height: 1;">+</button>
+                </div>
+                <button onClick="{{ c.del }}" style="font-family: 'DM Sans', sans-serif; border: none; background: transparent; color: #86868b; font-size: 12px; cursor: pointer; padding: 0; transition: color 0.2s ease;" style-hover="color: #d70015;">{{ c.removeLabel }}</button>
+              </div>
+            </div>
+            <span style="font-size: 14px; font-weight: 600; color: #1d1d1f;">{{ c.line }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top: 1px solid rgba(0,0,0,0.08); padding: 18px 26px 24px; display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; align-items: baseline; justify-content: space-between;">
+          <span style="font-size: 14px; color: #6e6e73;">{{ cartSubtotalLabel }}</span>
+          <span style="font-size: 18px; font-weight: 600; color: #1d1d1f;">{{ cartSubtotal }}</span>
+        </div>
+        <button onClick="{{ doCheckout }}" style="font-family: 'DM Sans', sans-serif; display: block; width: 100%; text-align: center; font-size: 15px; font-weight: 600; padding: 14px 0; background: #0071e3; color: #ffffff; border: none; border-radius: 10px; cursor: pointer; transition: background 0.25s ease;" style-hover="background: #0077ed;">{{ cartCheckout }}</button>
+        <span style="font-size: 11.5px; color: #86868b; text-align: center;">{{ cartSecure }}</span>
+      </div>
+    </sc-if>
+  </aside>
+
+  <!-- NAV -->
+  <nav onMouseLeave="{{ scheduleClose }}" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255,255,255,0.8); backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6); border-bottom: 1px solid rgba(0,0,0,0.1);">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; height: 62px; box-sizing: border-box;">
+      <a href="#" onClick="{{ goHome }}" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none; cursor: pointer;">
+        <span style="font-size: 28px; font-weight: 700; letter-spacing: 0.2em; color: #1d1d1f;">KIU</span>
+      </a>
+      <input value="{{ searchValue }}" onChange="{{ onSearch }}" placeholder="{{ searchPlaceholder }}" style="font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 8px 16px; border: 1px solid rgba(0,0,0,0.15); border-radius: 999px; background: #f5f5f7; color: #1d1d1f; outline: none; width: 300px; box-sizing: border-box; transition: all 0.25s ease;" style-focus="border-color: #0071e3; background: #ffffff; width: 340px;">
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <a class="kiu-hov" href="#catalogo" onMouseEnter="{{ openCatalogo }}" style="font-size: 14px; font-weight: 500; color: #1d1d1f; text-decoration: none; padding: 10px 16px; border-radius: 999px; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ navCatalogo }}</a>
+        <a class="kiu-hov" href="#contacto" onMouseEnter="{{ closeSoon }}" style="font-size: 14px; font-weight: 500; color: #1d1d1f; text-decoration: none; padding: 10px 16px; border-radius: 999px; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ navContacto }}</a>
+        <button onClick="{{ toggleLang }}" style="font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; padding: 7px 15px; margin-left: 14px; border: 1px solid rgba(0,0,0,0.45); border-radius: 999px; background: transparent; color: #0071e3; cursor: pointer; transition: all 0.25s ease;" style-hover="background: #0071e3; color: #ffffff;">{{ langLabel }}</button>
+        <button onClick="{{ toggleCart }}" title="{{ cartTitle }}" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-left: 8px; border: none; border-radius: 999px; background: transparent; cursor: pointer; transition: background 0.25s ease;" style-hover="background: rgba(0,0,0,0.06);">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l1.2 13H4.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          <span style="position: absolute; top: 0px; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 999px; background: #0071e3; color: #ffffff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; opacity: {{ cartBadgeOpacity }}; transition: opacity 0.25s ease;">{{ cartCount }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- DROPDOWN PANEL -->
+    <div onMouseEnter="{{ cancelClose }}" onMouseLeave="{{ scheduleClose }}" style="overflow: hidden; max-height: {{ panelMaxH }}; opacity: {{ panelOpacity }}; transition: max-height 0.55s cubic-bezier(0.33, 1, 0.5, 1), opacity 0.4s ease; border-top: 1px solid rgba(0,0,0,0.06);">
+      <div style="max-width: 1240px; margin: 0 auto; padding: 36px 56px 46px; box-sizing: border-box;">
+        <sc-if value="{{ menuCatalogo }}" hint-placeholder-val="{{ false }}">
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr) 1.15fr; gap: 40px; animation: kiuFadeUp 0.5s ease both;">
+            <sc-for list="{{ menuMats }}" as="col" hint-placeholder-count="4">
+              <div>
+                <button class="kiu-hov" onClick="{{ col.pick }}" style="font-family: 'DM Sans', sans-serif; text-align: left; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #86868b; font-weight: 600; margin: 0 0 16px; background: transparent; border: none; padding: 0; cursor: pointer; transition: color 0.25s ease;">{{ col.label }} →</button>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <sc-for list="{{ col.items }}" as="m" hint-placeholder-count="2">
+                    <a class="kiu-hov" href="#catalogo" onClick="{{ m.pick }}" style="font-size: 17px; font-weight: 500; color: #1d1d1f; text-decoration: none; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ m.label }}</a>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <div style="border-left: 1px solid rgba(0,0,0,0.12); padding-left: 40px;">
+              <p style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #86868b; font-weight: 600; margin: 0 0 16px;">{{ colDestacado }}</p>
+              <p style="font-size: 16px; line-height: 1.5; color: #6e6e73; margin: 0 0 16px; font-weight: 300;">{{ menuQuote }}</p>
+              <a href="#catalogo" onClick="{{ pickAll }}" style="font-size: 13px; font-weight: 600; color: #0071e3; text-decoration: none;" style-hover="color: #0077ed;">{{ menuVerTodo }} →</a>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </nav>
+
+  <sc-if value="{{ pageHome }}" hint-placeholder-val="{{ true }}">
+  <!-- CATALOGO (primero) -->
+  <section id="catalogo" data-screen-label="Catálogo" style="padding: 136px 64px 128px;">
+    <div style="max-width: 1520px; margin: 0 auto;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 0 0 72px; animation: kiuFadeUp 0.6s ease both;">
+        <h1 style="font-size: 38px; font-weight: 600; letter-spacing: -0.02em; color: #1d1d1f; margin: 0;">{{ catTitle }}</h1>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size: 13px; color: #86868b; font-weight: 300;">{{ noResultsMsg }}</span>
+          </sc-if>
+          <sc-if value="{{ hasFilter }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ pickAll }}" style="font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #0071e3; background: rgba(0,113,227,0.08); border: none; border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: all 0.25s ease;" style-hover="background: rgba(0,113,227,0.15);">✕ {{ filterLabel }}</button>
+          </sc-if>
+        </div>
+        <span style="font-size: 14px; color: #86868b; font-weight: 400;">{{ catNote }}</span>
+      </div>
+
+      <!-- filtros + catálogo centrado -->
+      <div style="display: grid; grid-template-columns: 180px 1fr; gap: 64px; align-items: start; animation: kiuFadeUp 0.6s ease 0.1s both;">
+        <aside style="position: sticky; top: 110px; display: flex; flex-direction: column; gap: 22px; border-right: 1px solid rgba(0,0,0,0.1); padding: 8px 28px 24px 0;">
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">{{ filtersTitle }}</span>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ priceTitle }}</span>
+            <sc-for list="{{ priceOpts }}" as="f" hint-placeholder-count="3">
+              <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73;">
+                <input type="checkbox" checked="{{ f.checked }}" onChange="{{ f.toggle }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
+                <span>{{ f.label }}</span>
+              </label>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ matTitle }}</span>
+            <sc-for list="{{ matOpts }}" as="m" hint-placeholder-count="4">
+              <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73;">
+                <input type="checkbox" checked="{{ m.checked }}" onChange="{{ m.toggle }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
+                <span>{{ m.label }}</span>
+              </label>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ shipTitle2 }}</span>
+            <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73;">
+              <input type="checkbox" checked="{{ freeChecked }}" onChange="{{ toggleFree }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
+              <span>{{ freeLabel }}</span>
+            </label>
+          </div>
+        </aside>
+
+      <div style="width: 100%; display: flex; flex-direction: column; gap: 64px; opacity: {{ listOpacity }}; transform: translateY({{ listShift }}); transition: opacity 0.28s ease, transform 0.28s ease;">
+
+        <!-- destacado rotativo -->
+        <sc-if value="{{ showFeat }}" hint-placeholder-val="{{ true }}">
+        <article onClick="{{ featOpen }}" style="position: relative; cursor: pointer; border-radius: 16px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); aspect-ratio: 21 / 9;">
+          <div style="position: absolute; inset: 0; opacity: {{ featOpacity }}; transition: opacity 0.5s ease;">
+            <image-slot id="{{ featImgId }}" src="{{ featSrc }}" shape="rect" placeholder="{{ featPlaceholder }}" style="width: 100%; height: 100%; display: block;"></image-slot>
+          </div>
+          <span class="kiu-badge" style="position: absolute; top: 20px; left: 20px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: #ffffff; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 999px; transition: background 0.3s ease;">{{ featBadge }}</span>
+          <div style="position: absolute; left: 20px; bottom: 20px; display: flex; align-items: baseline; gap: 14px; background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 20px; border-radius: 999px; opacity: {{ featOpacity }}; transition: opacity 0.5s ease;">
+            <span style="font-size: 16px; font-weight: 600; color: #1d1d1f;">{{ featCurName }}</span>
+            <span style="font-size: 14px; font-weight: 500; color: #0071e3;">{{ featCurPrice }}</span>
+          </div>
+          <div style="position: absolute; right: 20px; bottom: 26px; display: flex; gap: 8px;">
+            <sc-for list="{{ featDots }}" as="d" hint-placeholder-count="6">
+              <button onClick="{{ d.pick }}" style="width: 8px; height: 8px; padding: 0; border: none; border-radius: 50%; background: {{ d.bg }}; cursor: pointer; transition: background 0.3s ease;"></button>
+            </sc-for>
+          </div>
+        </article>
+        </sc-if>
+
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 48px;">
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+          <article onClick="{{ p.open }}" style="grid-column: {{ p.span }}; cursor: pointer; display: flex; flex-direction: column; gap: 18px; transition: transform 0.35s cubic-bezier(0.33, 1, 0.5, 1);" style-hover="transform: translateY(-6px);">
+            <div style="border-radius: 16px; overflow: hidden; aspect-ratio: {{ p.aspect }}; border: 1px solid rgba(0,0,0,0.1);">
+              <image-slot id="{{ p.imgId }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.placeholder }}" style="width: 100%; height: 100%; display: block;"></image-slot>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; text-align: left; padding: 0 4px;">
+              <span style="font-size: 16px; font-weight: 600; color: #1d1d1f;">{{ p.name }}</span>
+              <span style="font-size: 13.5px; font-weight: 300; line-height: 1.45; color: #6e6e73;">{{ p.shortDesc }}</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 14px; color: #e8930c; letter-spacing: 1px;">{{ p.stars }}</span>
+                <span style="font-size: 13px; color: #0071e3;">{{ p.ratingCount }}</span>
+              </div>
+              <span style="font-size: 12.5px; font-weight: 400; color: #86868b;">{{ p.sold }}</span>
+              <span style="font-size: 15px; font-weight: 600; color: #1d1d1f;">{{ p.price }}</span>
+            </div>
+          </article>
+        </sc-for>
+      </div>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BANDA BREVE DE MARCA -->
+  <section style="background: #ffffff; padding: 72px 56px;">
+    <p style="max-width: 900px; margin: 0 auto; text-align: center; font-size: 26px; line-height: 1.5; font-weight: 300; color: #1d1d1f; text-wrap: balance;">{{ brandLine }}</p>
+  </section>
+  </sc-if>
+
+  <!-- PAGINA DE PRODUCTO -->
+  <sc-if value="{{ pageDetail }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Producto" style="padding: 96px 56px 96px; min-height: 72vh; box-sizing: border-box; animation: kiuFadeUp 0.6s ease both;">
+      <div style="max-width: 1240px; margin: 0 auto;">
+        <button onClick="{{ backToCatalog }}" style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #6e6e73; background: transparent; border: none; padding: 8px 0; cursor: pointer; transition: color 0.25s ease;" style-hover="color: #0071e3;">← {{ detBack }}</button>
+
+        <div style="position: relative; display: grid; grid-template-columns: 76px 1fr 380px; gap: 24px; align-items: start; margin-top: 16px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 28px;">
+          <!-- miniaturas -->
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <sc-for list="{{ detThumbs }}" as="th" hint-placeholder-count="3">
+              <div onClick="{{ th.pick }}" style="cursor: pointer; border-radius: 10px; overflow: hidden; border: {{ th.border }}; aspect-ratio: 1;">
+                <image-slot id="{{ th.slotId }}" src="{{ th.src }}" shape="rect" placeholder="{{ th.ph }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- foto principal con lupa 5x y lightbox -->
+          <div onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; border-radius: 14px; overflow: hidden; background: #f5f5f7; height: 540px; cursor: zoom-in;">
+            <image-slot id="{{ mainImgId }}" src="{{ mainSrc }}" shape="rect" placeholder="{{ detName }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
+            <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
+              <div style="position: absolute; pointer-events: none; width: 34%; height: 34%; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
+            </sc-if>
+          </div>
+
+          <!-- panel de zoom estilo Amazon (a la derecha, sobre la columna de compra) -->
+          <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
+            <div style="position: absolute; z-index: 5; top: 28px; right: 28px; width: 380px; height: 540px; border-radius: 14px; overflow: hidden; background-color: #ffffff; border: 1px solid rgba(0,0,0,0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.18); background-image: {{ zoomBg }}; background-repeat: no-repeat; background-size: 300%; background-position: {{ zoomPos }}; pointer-events: none;"></div>
+          </sc-if>
+
+          <!-- columna de compra -->
+          <div style="display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; padding: 24px;">
+            <span style="font-size: 13px; color: #86868b; font-weight: 400;">{{ detCondition }}</span>
+            <h1 style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em; color: #1d1d1f; margin: 0; line-height: 1.25;">{{ detName }}</h1>
+            <span style="font-size: 34px; font-weight: 500; color: #1d1d1f;">{{ detPrice }}</span>
+            <span style="font-size: 14px; font-weight: 600; color: #1d873c;">{{ detShipFree }}</span>
+            <span style="font-size: 14px; font-weight: 600; color: {{ detStockColor }};">{{ detStock }}</span>
+            <!-- producto conectado a Shopify: compra directa + carrito -->
+            <sc-if value="{{ detCanBuy }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ buyNowClick }}" style="font-family: 'DM Sans', sans-serif; display: block; width: 100%; text-align: center; font-size: 15px; font-weight: 600; padding: 14px 0; background: #0071e3; color: #ffffff; border: none; border-radius: 10px; cursor: pointer; transition: background 0.25s ease;" style-hover="background: #0077ed;">{{ btnBuy }}</button>
+              <button onClick="{{ addToCartNow }}" style="font-family: 'DM Sans', sans-serif; display: block; width: 100%; text-align: center; font-size: 15px; font-weight: 600; padding: 14px 0; background: rgba(0,113,227,0.1); color: #0071e3; border: none; border-radius: 10px; cursor: pointer; transition: background 0.25s ease;" style-hover="background: rgba(0,113,227,0.18);">{{ btnAddCart }}</button>
+              <a href="https://wa.me/" style="display: block; text-align: center; font-size: 14px; font-weight: 600; padding: 12px 0; background: transparent; color: #0071e3; border: 1px solid rgba(0,113,227,0.35); border-radius: 10px; text-decoration: none; transition: all 0.25s ease;" style-hover="background: rgba(0,113,227,0.06);">{{ btnWhats }}</a>
+            </sc-if>
+            <!-- producto conectado pero agotado en Shopify -->
+            <sc-if value="{{ detSoldOut }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align: center; font-size: 14px; font-weight: 600; padding: 14px 0; background: #f5f5f7; color: #86868b; border-radius: 10px;">{{ soldOutMsg }}</div>
+              <a href="https://wa.me/" style="display: block; text-align: center; font-size: 15px; font-weight: 600; padding: 14px 0; background: rgba(0,113,227,0.1); color: #0071e3; border-radius: 10px; text-decoration: none; transition: background 0.25s ease;" style-hover="background: rgba(0,113,227,0.18);">{{ btnWhats }}</a>
+            </sc-if>
+            <!-- producto aún sin conectar a Shopify: flujo original por WhatsApp -->
+            <sc-if value="{{ detNoBuy }}" hint-placeholder-val="{{ true }}">
+              <a href="https://wa.me/" style="display: block; text-align: center; font-size: 15px; font-weight: 600; padding: 14px 0; background: #0071e3; color: #ffffff; border-radius: 10px; text-decoration: none; transition: background 0.25s ease;" style-hover="background: #0077ed;">{{ btnBuy }}</a>
+              <a href="https://wa.me/" style="display: block; text-align: center; font-size: 15px; font-weight: 600; padding: 14px 0; background: rgba(0,113,227,0.1); color: #0071e3; border-radius: 10px; text-decoration: none; transition: background 0.25s ease;" style-hover="background: rgba(0,113,227,0.18);">{{ btnWhats }}</a>
+            </sc-if>
+            <div style="border-top: 1px solid rgba(0,0,0,0.1); margin-top: 8px; padding-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2" style="flex: none; margin-top: 2px;"><path d="M3 12l4-4v3h10v2H7v3z"/><circle cx="12" cy="12" r="10"/></svg>
+                <span style="font-size: 13px; line-height: 1.5; color: #6e6e73;"><span style="color: #0071e3; font-weight: 500;">{{ ben1a }}</span> {{ ben1b }}</span>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2" style="flex: none; margin-top: 2px;"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>
+                <span style="font-size: 13px; line-height: 1.5; color: #6e6e73;"><span style="color: #0071e3; font-weight: 500;">{{ ben2a }}</span> {{ ben2b }}</span>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="2" style="flex: none; margin-top: 2px;"><path d="M20 6L9 17l-5-5"/></svg>
+                <span style="font-size: 13px; line-height: 1.5; color: #6e6e73;">{{ ben3 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- lightbox -->
+        <sc-if value="{{ lightboxOn }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 95; background: rgba(0,0,0,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); display: flex; align-items: center; justify-content: center; cursor: zoom-out; animation: kiuLbBg 0.5s ease both;">
+            <div style="width: 88vmin; height: 88vmin; max-width: 90vw; max-height: 90vh; border-radius: 24px; overflow: hidden; background-image: {{ zoomBg }}; background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: 0 30px 80px rgba(0,0,0,0.4); animation: kiuLbImg 0.55s cubic-bezier(0.33, 1, 0.5, 1) 0.08s both;"></div>
+          </div>
+        </sc-if>
+
+        <!-- descripción y características -->
+        <div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px; margin-top: 24px;">
+          <div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px;">
+            <h2 style="font-size: 22px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px;">{{ descTitle }}</h2>
+            <p style="font-size: 16px; line-height: 1.75; color: #6e6e73; margin: 0; font-weight: 300;">{{ detDesc }} {{ detDescExtra }}</p>
+          </div>
+          <div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px; align-self: start;">
+            <h2 style="font-size: 18px; font-weight: 600; color: #1d1d1f; margin: 0 0 8px;">{{ charTitle }}</h2>
+            <sc-for list="{{ charRows }}" as="row" hint-placeholder-count="3">
+              <div style="display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid rgba(0,0,0,0.08);">
+                <span style="font-size: 13.5px; color: #86868b;">{{ row.k }}</span>
+                <span style="font-size: 13.5px; color: #1d1d1f; font-weight: 500; text-align: right;">{{ row.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- reseñas -->
+        <div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px; margin-top: 24px;">
+          <h2 style="font-size: 22px; font-weight: 600; color: #1d1d1f; margin: 0 0 24px;">{{ revTitle }}</h2>
+          <div style="display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start;">
+            <!-- resumen -->
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; align-items: baseline; gap: 10px;">
+                <span style="font-size: 52px; font-weight: 600; color: #1d1d1f; line-height: 1;">{{ revAvg }}</span>
+                <span style="font-size: 14px; color: #86868b;">/ 5</span>
+              </div>
+              <span style="font-size: 18px; color: #0071e3; letter-spacing: 2px;">{{ revAvgStars }}</span>
+              <span style="font-size: 13px; color: #86868b;">{{ revCount }}</span>
+              <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
+                <sc-for list="{{ revBars }}" as="b" hint-placeholder-count="5">
+                  <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 12px; color: #86868b; width: 10px; text-align: right;">{{ b.star }}</span>
+                    <div style="flex: 1; height: 6px; border-radius: 999px; background: rgba(0,0,0,0.08); overflow: hidden;">
+                      <div style="height: 100%; border-radius: 999px; background: #0071e3; width: {{ b.pct }};"></div>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <!-- lista -->
+            <div style="display: flex; flex-direction: column;">
+              <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3">
+                <div style="display: flex; flex-direction: column; gap: 8px; padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.08);">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+                    <span style="font-size: 14px; color: #0071e3; letter-spacing: 2px;">{{ r.stars }}</span>
+                    <span style="font-size: 12.5px; color: #86868b;">{{ r.date }}</span>
+                  </div>
+                  <p style="font-size: 15px; line-height: 1.6; color: #1d1d1f; margin: 0; font-weight: 300;">{{ r.text }}</p>
+                  <span style="font-size: 13px; color: #86868b;">{{ r.author }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </sc-if>
+
+  <!-- CONTACTO -->
+  <footer id="contacto" data-screen-label="Contacto" style="padding: 88px 56px 64px;">
+    <div style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center;">
+      <div>
+        <h2 style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #1d1d1f; margin: 0 0 14px; text-wrap: balance;">{{ contactTitle }}</h2>
+        <p style="font-size: 16px; line-height: 1.65; color: #6e6e73; margin: 0; max-width: 46ch; font-weight: 300;">{{ contactDesc }}</p>
+      </div>
+      <div style="border-left: 1px solid rgba(0,0,0,0.15); padding-left: 48px; display: flex; flex-direction: column; gap: 18px;">
+        <div>
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">Email</span>
+          <p style="font-size: 15px; color: #1d1d1f; margin: 4px 0 0;">hola@kiu-artesanias.mx</p>
+        </div>
+        <div>
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">Instagram</span>
+          <p style="font-size: 15px; color: #1d1d1f; margin: 4px 0 0;">@kiu.artesanias</p>
+        </div>
+        <div>
+          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">{{ shipLabel }}</span>
+          <p style="font-size: 15px; color: #1d1d1f; margin: 4px 0 0;">{{ shipDesc }}</p>
+        </div>
+      </div>
+    </div>
+    <p style="max-width: 1240px; margin: 64px auto 0; font-size: 12px; color: #86868b; border-top: 1px solid rgba(0,0,0,0.12); padding-top: 24px;">© 2026 KIU · {{ footNote }}</p>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;idioma&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;es&quot;, &quot;en&quot;], &quot;default&quot;: &quot;es&quot;, &quot;tsType&quot;: &quot;'es' | 'en'&quot;, &quot;section&quot;: &quot;Contenido&quot; }
+}">
+class Component extends DCLogic {
+  state = (() => {
+    const s = { lang: null, openMenu: null, sel: null, page: 'home', product: null, white: false, cat: 'all', query: '', appliedCat: 'all', appliedQuery: '', detSel: 0, zoomOn: false, zoomX: 50, zoomY: 50, lightbox: false, priceSel: {}, freeSel: false, matSel: {}, appliedPriceSel: {}, appliedFreeSel: false, appliedMatSel: {}, listFade: false, featIdx: 0, featFade: false, cartOpen: false, cart: [], shopVariants: {} };
+    try {
+      const m = (window.location.hash || '').match(/^#\/?producto\/([^?&\/]+)/i);
+      if (m) {
+        const slugMap = { budas: 'hero-img', 'cara-del-silencio': 'prod-cuenco', david: 'prod-utensilios', elefantes: 'prod-cesta', 'servilletero-burro': 'prod-macetero', puerco: 'prod-movil' };
+        const ids = ['hero-img', 'prod-cuenco', 'prod-utensilios', 'prod-cesta', 'prod-macetero', 'prod-movil'];
+        const key = decodeURIComponent(m[1]).toLowerCase();
+        const id = slugMap[key] || (ids.indexOf(key) >= 0 ? key : null);
+        if (id) { s.page = 'detail'; s.product = { imgId: id }; }
+      }
+    } catch (e) {}
+    return s;
+  })();
+
+  fadeApply() {
+    this.setState({ listFade: true });
+    clearTimeout(this._filterT);
+    this._filterT = setTimeout(() => {
+      this.setState({ appliedCat: this.state.cat, appliedQuery: this.state.query, appliedPriceSel: this.state.priceSel, appliedFreeSel: this.state.freeSel, appliedMatSel: this.state.matSel, listFade: false });
+    }, 260);
+  }
+
+  componentDidMount() {
+    this.loadCartFromStorage();
+    this.fetchShopify();
+    this._route = this.routeFromHash();
+    this._onRoute = () => this.syncRoute();
+    window.addEventListener('hashchange', this._onRoute);
+    window.addEventListener('popstate', this._onRoute);
+    this._featTimer = setInterval(() => {
+      if (this.state.page !== 'home') return;
+      this.goFeat((this.state.featIdx + 1) % 6);
+    }, 4500);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this._featTimer);
+    if (this._onRoute) {
+      window.removeEventListener('hashchange', this._onRoute);
+      window.removeEventListener('popstate', this._onRoute);
+    }
+  }
+
+  goFeat(i) {
+    if (i === this.state.featIdx) return;
+    this.setState({ featFade: true });
+    setTimeout(() => this.setState({ featIdx: i, featFade: false }), 500);
+  }
+  closeTimer = null;
+  selTimers = [];
+
+  clearSelTimers() {
+    this.selTimers.forEach(clearTimeout);
+    this.selTimers = [];
+  }
+
+  openProduct(prod, e) {
+    // anclar la animación exactamente al marco de la foto (no a toda la tarjeta)
+    const imgBox = e.currentTarget.querySelector('image-slot') || e.currentTarget;
+    const rect = (imgBox.closest && imgBox.closest('div') ? imgBox.closest('div') : imgBox).getBoundingClientRect();
+    this.setState({ detSel: 0 });
+    this.clearSelTimers();
+    // destino: el visor principal de la página de producto (elemento compartido)
+    const vw = window.innerWidth;
+    const containerW = Math.min(1240, vw - 112);
+    const target = {
+      top: 178,
+      left: (vw - containerW) / 2 + 28 + 76 + 24,
+      w: Math.max(320, containerW - 56 - 76 - 380 - 48),
+      h: 540,
+    };
+    this.setState({ sel: { ...prod, rect: { top: rect.top, left: rect.left, w: rect.width, h: rect.height }, target, phase: 'start' } });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (this.state.sel) this.setState({ sel: { ...this.state.sel, phase: 'open' } });
+    }));
+    this.selTimers = [
+      setTimeout(() => this.setState({ white: true }), 460),
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        this.setProductHash(prod.imgId);
+        this.setState({ page: 'detail', product: { imgId: prod.imgId }, sel: null, white: false, openMenu: null });
+      }, 880),
+    ];
+  }
+
+  closeProduct() {
+    if (!this.state.sel) return;
+    this.clearSelTimers();
+    this.setState({ sel: { ...this.state.sel, phase: 'closing' }, white: false });
+    this.selTimers = [setTimeout(() => this.setState({ sel: null }), 660)];
+  }
+
+  backToCatalog() {
+    this.clearSelTimers();
+    this.setState({ white: true });
+    this.selTimers = [setTimeout(() => {
+      window.scrollTo(0, 0);
+      this.clearHash();
+      this.setState({ page: 'home', product: null, white: false });
+    }, 440)];
+  }
+
+  // --- Enlaces directos por producto (deep-linking: #producto/<slug>) ---
+  productSlugMap() {
+    return { 'hero-img': 'budas', 'prod-cuenco': 'cara-del-silencio', 'prod-utensilios': 'david', 'prod-cesta': 'elefantes', 'prod-macetero': 'servilletero-burro', 'prod-movil': 'puerco' };
+  }
+  slugForId(id) { return this.productSlugMap()[id] || id; }
+  idFromSlug(slug) {
+    if (!slug) return null;
+    const key = decodeURIComponent(String(slug)).toLowerCase();
+    const map = this.productSlugMap();
+    for (const id in map) { if (map[id] === key) return id; }
+    return map[key] ? key : null;
+  }
+  routeFromHash() {
+    const m = (window.location.hash || '').match(/^#\/?producto\/([^?&\/]+)/i);
+    return m ? this.idFromSlug(m[1]) : null;
+  }
+  syncRoute() {
+    const id = this.routeFromHash();
+    if (id === this._route) return;
+    this._route = id;
+    this.clearSelTimers();
+    window.scrollTo(0, 0);
+    if (id) this.setState({ page: 'detail', product: { imgId: id }, detSel: 0, sel: null, white: false, openMenu: null, zoomOn: false, lightbox: false });
+    else this.setState({ page: 'home', product: null, sel: null, white: false, openMenu: null });
+  }
+  setProductHash(id) {
+    this._route = id;
+    const target = 'producto/' + this.slugForId(id);
+    if (('#' + target) !== (window.location.hash || '')) window.location.hash = target;
+  }
+  clearHash() {
+    this._route = null;
+    if (window.location.hash) {
+      try { window.history.replaceState(null, '', window.location.pathname + window.location.search); }
+      catch (e) { window.location.hash = ''; }
+    }
+  }
+
+  // --- Shopify (tienda en línea) ---
+  // Para conectar otro producto: créalo en Shopify, copia su ID numérico
+  // (aparece en el código del Buy Button como id: '...') y agrégalo aquí:
+  //   'hero-img'        = Budas Bebés          (conectado)
+  //   'prod-cuenco'     = Cara Del Silencio    (conectado)
+  //   'prod-cesta'      = Tres Elefantes       (conectado)
+  //   'prod-movil'      = Mini Puerco Alcancía (conectado)
+  //   'prod-macetero'   = Servilletero Burro   (conectado)
+  //   'prod-utensilios' = Hombre Pensante      (conectado)
+  shopifyCfg() {
+    return {
+      domain: 'k71dt4-2i.myshopify.com',
+      token: 'b96303e0e6276f37b63bd155a824045c',
+      products: {
+        'hero-img': '9124552540388',
+        'prod-cuenco': '9124797612260',
+        'prod-cesta': '9126519800036',
+        'prod-movil': '9126541394148',
+        'prod-macetero': '9126552797412',
+        'prod-utensilios': '9126559088868',
+      },
+    };
+  }
+
+  // Consulta a Shopify el precio, la variante y la disponibilidad de los
+  // productos conectados (API Storefront oficial; el token es público de lectura).
+  fetchShopify() {
+    const cfg = this.shopifyCfg();
+    const ids = Object.keys(cfg.products);
+    if (!ids.length) return;
+    const gids = ids.map((k) => 'gid://shopify/Product/' + cfg.products[k]);
+    const query = 'query($ids:[ID!]!){nodes(ids:$ids){... on Product{id title variants(first:1){edges{node{id availableForSale price{amount currencyCode}}}}}}}';
+    fetch('https://' + cfg.domain + '/api/2025-04/graphql.json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Shopify-Storefront-Access-Token': cfg.token },
+      body: JSON.stringify({ query: query, variables: { ids: gids } }),
+    }).then((r) => r.json()).then((j) => {
+      const out = {};
+      const nodes = (j && j.data && j.data.nodes) || [];
+      nodes.forEach((n) => {
+        if (!n || !n.id) return;
+        const pid = String(n.id).split('/').pop();
+        const imgId = ids.find((k) => cfg.products[k] === pid);
+        const edge = n.variants && n.variants.edges && n.variants.edges[0];
+        if (!imgId || !edge) return;
+        out[imgId] = {
+          variant: String(edge.node.id).split('/').pop(),
+          price: parseFloat(edge.node.price.amount),
+          currency: edge.node.price.currencyCode || 'MXN',
+          available: edge.node.availableForSale !== false,
+        };
+      });
+      this.setState({ shopVariants: out });
+    }).catch(() => {});
+  }
+
+  loadCartFromStorage() {
+    try {
+      const raw = window.localStorage.getItem('kiu-cart');
+      if (raw) {
+        const items = JSON.parse(raw);
+        if (Array.isArray(items)) this.setState({ cart: items.filter((it) => it && it.imgId && it.qty > 0) });
+      }
+    } catch (e) {}
+  }
+
+  saveCart(cart) {
+    this.setState({ cart });
+    try { window.localStorage.setItem('kiu-cart', JSON.stringify(cart)); } catch (e) {}
+  }
+
+  fmtMoney(n) {
+    const v = Math.round(n * 100) / 100;
+    return '$' + (v % 1 === 0 ? String(v) : v.toFixed(2));
+  }
+
+  // URL oficial de Shopify que abre el checkout con los artículos elegidos.
+  cartPermalink(items) {
+    return 'https://' + this.shopifyCfg().domain + '/cart/' + items.map((it) => it.variant + ':' + it.qty).join(',');
+  }
+
+  addToCart(imgId) {
+    if (!this.state.shopVariants[imgId]) return;
+    const cart = (this.state.cart || []).slice();
+    const i = cart.findIndex((it) => it.imgId === imgId);
+    if (i >= 0) cart[i] = { imgId: imgId, qty: Math.min(99, cart[i].qty + 1) };
+    else cart.push({ imgId: imgId, qty: 1 });
+    this.saveCart(cart);
+    this.setState({ cartOpen: true, openMenu: null });
+  }
+
+  setQty(imgId, qty) {
+    const cart = (this.state.cart || []).slice();
+    const i = cart.findIndex((it) => it.imgId === imgId);
+    if (i < 0) return;
+    if (qty <= 0) cart.splice(i, 1);
+    else cart[i] = { imgId: imgId, qty: Math.min(99, qty) };
+    this.saveCart(cart);
+  }
+
+  buyNow(imgId) {
+    const v = this.state.shopVariants[imgId];
+    if (!v) return;
+    const cart = this.state.cart || [];
+    // cesta vacía → compra directa solo con este producto
+    if (!cart.length) {
+      window.open(this.cartPermalink([{ variant: v.variant, qty: 1 }]), '_blank');
+      return;
+    }
+    // hay cosas en la cesta → sumar este producto (si no está ya) y pagar TODO junto
+    const merged = cart.slice();
+    if (merged.findIndex((it) => it.imgId === imgId) < 0) merged.push({ imgId: imgId, qty: 1 });
+    this.saveCart(merged);
+    const rows = merged
+      .map((it) => { const sv = this.state.shopVariants[it.imgId]; return sv ? { variant: sv.variant, qty: it.qty } : null; })
+      .filter(Boolean);
+    window.open(this.cartPermalink(rows), '_blank');
+  }
+
+  checkoutCart() {
+    const rows = (this.state.cart || [])
+      .map((it) => { const v = this.state.shopVariants[it.imgId]; return v ? { variant: v.variant, qty: it.qty } : null; })
+      .filter(Boolean);
+    if (rows.length) window.open(this.cartPermalink(rows), '_blank');
+  }
+
+  currentLang() {
+    return this.state.lang || this.props.idioma || 'es';
+  }
+
+  setMenu(menu) {
+    if (this.closeTimer) { clearTimeout(this.closeTimer); this.closeTimer = null; }
+    if (this.state.openMenu !== menu) this.setState({ openMenu: menu });
+  }
+
+  delayClose(ms) {
+    if (this.closeTimer) clearTimeout(this.closeTimer);
+    this.closeTimer = setTimeout(() => {
+      this.closeTimer = null;
+      this.setState({ openMenu: null });
+    }, ms);
+  }
+
+  renderVals() {
+    const lang = this.currentLang();
+    const es = lang === 'es';
+    const open = this.state.openMenu;
+
+    const t = es ? {
+      brandSub: 'artesanías',
+      langLabel: 'EN',
+      navCatalogo: 'Catálogo', navContacto: 'Contacto',
+      catTitle: 'Catálogo',
+      catNote: 'Piezas únicas hechas a mano',
+      featName: 'Budas Bebés Pequeños No Oigo No Hablo No Escucho', featPrice: '$299 MXN',
+      feat2Name: 'Cara Del Silencio Figura', feat2Price: '$399 MXN',
+      brandLine: 'Madera tallada, fibras tejidas y barro moldeado con calma — para hogares que valoran lo hecho despacio.',
+      contactTitle: '¿Te enamoraste de alguna pieza?',
+      contactDesc: 'Escríbenos por WhatsApp para apartar tu pieza, pedir fotos adicionales o encargar un diseño a medida.',
+      contactCta: 'Pedir por WhatsApp',
+      shipLabel: 'Envíos',
+      shipDesc: 'A todo el país · empaque protegido',
+      footNote: 'Artesanías de madera y fibras naturales.',
+      colMadera: 'Madera', colFibras: 'Fibras y barro', colDestacado: 'Destacado',
+      menuQuote: 'Cada veta cuenta la historia del árbol que la formó.',
+      menuVerTodo: 'Ver todo el catálogo',
+      menuWood: ['Budas Bebés Pequeños No Oigo No Hablo No Escucho', 'Cara Del Silencio Figura', 'Set de utensilios'],
+      menuFiber: ['Cesta tejida', 'Macetero de barro', 'Móvil de madera'],
+      products: [
+        { name: 'Budas Bebés Pequeños No Oigo No Hablo No Escucho', price: '$299 MXN' },
+        { name: 'Cara Del Silencio Figura', price: '$399 MXN' },
+        { name: 'David pensante', price: '$499 MXN' },
+        { name: 'Tres Elefantes No Oigo No Hablo No Escucho', price: '$349 MXN' },
+        { name: 'Servilletero Con Diseño De Burro', price: '$299 MXN' },
+        { name: 'Mini Puerco Alcancía', price: '$149 MXN' },
+      ],
+    } : {
+      brandSub: 'handcrafts',
+      langLabel: 'ES',
+      navCatalogo: 'Catalog', navContacto: 'Contact',
+      catTitle: 'Catalog',
+      catNote: 'One-of-a-kind handmade pieces',
+      featName: 'Little Baby Buddhas — Hear No, Speak No, See No Evil', featPrice: '$299 MXN',
+      feat2Name: 'Face of Silence Figure', feat2Price: '$399 MXN',
+      brandLine: 'Carved wood, woven fibers and slowly shaped clay — for homes that value things made without hurry.',
+      contactTitle: 'Fell in love with a piece?',
+      contactDesc: 'Message us on WhatsApp to reserve your piece, ask for more photos, or commission a custom design.',
+      contactCta: 'Order via WhatsApp',
+      shipLabel: 'Shipping',
+      shipDesc: 'Nationwide · protective packaging',
+      footNote: 'Wood and natural-fiber handcrafts.',
+      colMadera: 'Wood', colFibras: 'Fibers & clay', colDestacado: 'Featured',
+      menuQuote: 'Every grain tells the story of the tree that shaped it.',
+      menuVerTodo: 'View full catalog',
+      menuWood: ['Little Baby Buddhas — Hear No, Speak No, See No Evil', 'Face of Silence Figure', 'Utensil set'],
+      menuFiber: ['Woven basket', 'Clay planter', 'Wooden mobile'],
+      products: [
+        { name: 'Little Baby Buddhas — Hear No, Speak No, See No Evil', price: '$299 MXN' },
+        { name: 'Face of Silence Figure', price: '$399 MXN' },
+        { name: 'The Thinker', price: '$499 MXN' },
+        { name: 'Three Elephants — Hear No, Speak No, See No', price: '$349 MXN' },
+        { name: 'Donkey Napkin Holder Set', price: '$299 MXN' },
+        { name: 'Mini Piggy Bank', price: '$149 MXN' },
+      ],
+    };
+
+    const imgIds = ['hero-img', 'prod-cuenco', 'prod-utensilios', 'prod-cesta', 'prod-macetero', 'prod-movil'];
+    const placeholders = es
+      ? ['Foto: budas bebés', 'Foto: cara del silencio', 'Foto: utensilios', 'Foto: cesta tejida', 'Foto: macetero', 'Foto: móvil de madera']
+      : ['Photo: baby buddhas', 'Photo: face of silence', 'Photo: utensils', 'Photo: woven basket', 'Photo: planter', 'Photo: wooden mobile'];
+
+    const descs = es
+      ? { 'hero-img': 'Juego de tres Budas de decoración minimalista — No Oigo, No Veo, No Hablo. Transforma cualquier espacio con este elegante juego.', 'prod-cuenco': 'Escultura única que evoca misterio y contemplación. Tallada con precisión y detalle, capturará la atención de cualquier amante del arte y la decoración.', 'prod-utensilios': 'Añade serenidad y estilo a tu hogar u oficina con esta escultura de un hombre pensante, meticulosamente elaborada en yeso cerámico de alta calidad. Su postura relajada y expresión serena, junto a la textura cuidadosamente esculpida de la ropa y la piel, le dan un aspecto natural y contemplativo.', 'prod-cesta': 'Tres elefantes apilados que representan la sabiduría de "no oigo, no hablo, no veo". Pieza artesanal esculpida con gran detalle, con acabado dorado y pátina turquesa sobre base circular. Un símbolo de armonía y buena fortuna para cualquier espacio.', 'prod-macetero': 'Encantador servilletero artesanal con forma de burro —símbolo de trabajo y perseverancia— esculpido con gran detalle. El conjunto incluye dos saleros a juego que complementan el diseño, creando una armonía visual. Cada pieza es única, hecha a mano con materiales duraderos.', 'prod-movil': 'Alcancía en forma de mini puerquito, ideal para que los niños aprendan a ahorrar de forma divertida. Con su acabado brillante y carita simpática, alegra cualquier escritorio o recámara mientras guarda sus primeras monedas.' }
+      : { 'hero-img': 'Set of three minimalist decorative Buddhas — Hear No, See No, Speak No Evil. Transform any space with this elegant set.', 'prod-cuenco': 'A one-of-a-kind sculpture that evokes mystery and contemplation. Carved with precision and detail, it will captivate any lover of art and décor.', 'prod-utensilios': 'Bring serenity and style to your home or office with this sculpture of a seated, pensive man, meticulously crafted in high-quality ceramic plaster. Its relaxed posture and serene expression, along with carefully sculpted textures, give it a natural, contemplative look.', 'prod-cesta': 'Three stacked elephants embodying the wisdom of "hear no, speak no, see no evil." A handcrafted piece sculpted in fine detail with a golden finish and turquoise patina on a round base. A symbol of harmony and good fortune for any space.', 'prod-macetero': 'Charming handcrafted napkin holder shaped like a donkey —a symbol of hard work and perseverance— sculpted in great detail. The set includes two matching salt shakers that complement the design. Each piece is unique, handmade with durable materials.', 'prod-movil': 'Mini piggy-bank coin holder, perfect for kids to learn to save in a fun way. With its glossy finish and friendly face, it brightens any desk or bedroom while keeping their first coins safe.' };
+
+    const catalogMap = {
+      'hero-img': { name: t.featName, price: t.featPrice },
+      'prod-cuenco': { name: t.feat2Name, price: t.feat2Price },
+    };
+    t.products.forEach((p, i) => { catalogMap[imgIds[i]] = { name: p.name, price: p.price }; });
+
+    const ratingByImg = { 'hero-img': { stars: '★★★★★', n: 18 }, 'prod-cuenco': { stars: '★★★★☆', n: 12 }, 'prod-utensilios': { stars: '★★★★★', n: 26 }, 'prod-cesta': { stars: '★★★★☆', n: 9 }, 'prod-macetero': { stars: '★★★★★', n: 14 }, 'prod-movil': { stars: '★★★★☆', n: 7 } };
+    // fotos reales: portada (ancha) y cuadrada (detalle)
+    const coverByImg = { 'hero-img': 'uploads/protada_rectangular.png', 'prod-cuenco': 'uploads/silencio-portada.png', 'prod-utensilios': 'uploads/david-portada.png', 'prod-macetero': 'uploads/burro-portada.png', 'prod-movil': 'uploads/puerco-portada.png', 'prod-cesta': 'uploads/elefantes-portada.png' };
+    const squareByImg = { 'hero-img': 'uploads/1.png', 'prod-cuenco': 'uploads/4-e6379f43.png', 'prod-utensilios': 'uploads/david-4.png', 'prod-macetero': 'uploads/burro-1.png', 'prod-movil': 'uploads/puerco-4.png', 'prod-cesta': 'uploads/elefantes-1.png' };
+    // galería por producto: [foto principal, cuadrada 2, cuadrada 3, ...]
+    const galleryByImg = {
+      'hero-img': ['uploads/1.png', 'uploads/2.png', 'uploads/3.png', 'uploads/4.png', 'uploads/5.png', 'uploads/6.png'],
+      'prod-cuenco': ['uploads/4-e6379f43.png', 'uploads/5-7def2a11.png', 'uploads/6-f6da70ea.png'],
+      'prod-utensilios': ['uploads/david-4.png', 'uploads/david-5.png', 'uploads/david-6.png', 'uploads/david-1.png', 'uploads/david-2.png', 'uploads/david-3.png'],
+      'prod-macetero': ['uploads/burro-1.png', 'uploads/burro-2.png', 'uploads/burro-3.png', 'uploads/burro-4.png'],
+      'prod-movil': ['uploads/puerco-4.png', 'uploads/puerco-5.png'],
+      'prod-cesta': ['uploads/elefantes-1.png', 'uploads/elefantes-2.png', 'uploads/elefantes-3.png', 'uploads/elefantes-4.png', 'uploads/elefantes-5.png'],
+    };
+    const gal = this.state.product ? (galleryByImg[this.state.product.imgId] || ['', '', '']) : ['', '', ''];
+    const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': false, 'prod-cesta': true, 'prod-macetero': false, 'prod-movil': true };
+    const priceNum = (p) => parseInt(String(p).replace(/[^0-9]/g, ''), 10);
+    const passes = (p) => {
+      const st = this.state;
+      if (st.appliedCat !== 'all' && catByImg[p.imgId] !== st.appliedCat) return false;
+      if (!p.name.toLowerCase().includes((st.appliedQuery || '').trim().toLowerCase())) return false;
+      const sel = st.appliedPriceSel || {};
+      const anyPrice = sel.lt400 || sel.mid || sel.gt550;
+      if (anyPrice) {
+        const n = priceNum(p.price);
+        const ok = (sel.lt400 && n < 400) || (sel.mid && n >= 400 && n <= 550) || (sel.gt550 && n > 550);
+        if (!ok) return false;
+      }
+      if (st.appliedFreeSel && !freeByImg[p.imgId]) return false;
+      const msel = st.appliedMatSel || {};
+      const anyMat = Object.keys(msel).some((k) => msel[k]);
+      if (anyMat && !msel[materialByImg[p.imgId]]) return false;
+      return true;
+    };
+    const roundSold = (n) => {
+      const base = n >= 100 ? Math.floor(n / 100) * 100 : Math.floor(n / 10) * 10;
+      return Math.max(base, 10) + '+';
+    };
+    const soldByImg = { 'hero-img': 42, 'prod-cuenco': 31, 'prod-utensilios': 58, 'prod-cesta': 24, 'prod-macetero': 37, 'prod-movil': 19 };
+    const stockByImg = { 'hero-img': 8, 'prod-cuenco': 5, 'prod-utensilios': 12, 'prod-cesta': 3, 'prod-macetero': 6, 'prod-movil': 4 };
+    const catByImg = { 'hero-img': 'wood', 'prod-cuenco': 'wood', 'prod-utensilios': 'wood', 'prod-movil': 'wood', 'prod-cesta': 'fiber', 'prod-macetero': 'fiber' };
+    const materialByImg = { 'hero-img': 'ceramica', 'prod-cuenco': 'ceramica', 'prod-utensilios': 'ceramica', 'prod-movil': 'ceramica', 'prod-cesta': 'ceramica', 'prod-macetero': 'barro' };
+
+    const sel = this.state.sel;
+    const selOpenFull = sel && sel.phase === 'open';
+    const r = sel ? sel.rect : { top: 0, left: 0, w: 0, h: 0 };
+    const det = this.state.product ? catalogMap[this.state.product.imgId] : null;
+
+    // carrito Shopify: filas con nombre/foto del catálogo y precio real de la tienda
+    const shopv = this.state.shopVariants || {};
+    const cartItems = (this.state.cart || []).map((it) => {
+      const v = shopv[it.imgId];
+      const info = catalogMap[it.imgId];
+      if (!v || !info) return null;
+      return { imgId: it.imgId, qty: it.qty, name: info.name, img: squareByImg[it.imgId] || '', unit: v.price, line: v.price * it.qty, currency: v.currency };
+    }).filter(Boolean);
+    const cartCount = cartItems.reduce((a, b) => a + b.qty, 0);
+    const cartSubtotal = cartItems.reduce((a, b) => a + b.line, 0);
+    const detShop = this.state.product ? shopv[this.state.product.imgId] : null;
+
+    return {
+      es,
+      en: !es,
+      ...t,
+      products: t.products
+        .map((p, i) => ({
+          ...p,
+          imgId: imgIds[i],
+          placeholder: placeholders[i],
+          category: catByImg[imgIds[i]],
+          src: coverByImg[imgIds[i]] || '',
+          sold: roundSold(soldByImg[imgIds[i]]) + (es ? ' vendidos' : ' sold'),
+          shortDesc: descs[imgIds[i]],
+          stars: ratingByImg[imgIds[i]].stars,
+          ratingCount: '(' + ratingByImg[imgIds[i]].n + ')',
+          open: (e) => this.openProduct({ name: p.name, price: p.price, imgId: imgIds[i], desc: descs[imgIds[i]] }, e),
+        }))
+        .filter((p) => passes(p))
+        .map((p) => ({ ...p, span: 'auto', aspect: '16 / 10' })),
+
+      // barra lateral de filtros
+      filtersTitle: es ? 'Filtros' : 'Filters',
+      priceTitle: es ? 'Precio' : 'Price',
+      shipTitle2: es ? 'Envío' : 'Shipping',
+      priceOpts: [
+        { id: 'lt400', label: es ? 'Menos de $400' : 'Under $400' },
+        { id: 'mid', label: '$400 – $550' },
+        { id: 'gt550', label: es ? 'Más de $550' : 'Over $550' },
+      ].map((o) => ({
+        ...o,
+        checked: !!this.state.priceSel[o.id],
+        toggle: () => {
+          const sel = { ...this.state.priceSel, [o.id]: !this.state.priceSel[o.id] };
+          this.setState({ priceSel: sel });
+          this.fadeApply();
+        },
+      })),
+      freeLabel: es ? 'Envío gratis' : 'Free shipping',
+      freeChecked: this.state.freeSel,
+      toggleFree: () => { this.setState({ freeSel: !this.state.freeSel }); this.fadeApply(); },
+      matTitle: es ? 'Materiales' : 'Materials',
+      matOpts: [
+        { id: 'madera', label: es ? 'Madera' : 'Wood' },
+        { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
+        { id: 'barro', label: es ? 'Barro' : 'Clay' },
+        { id: 'fibra', label: es ? 'Fibras' : 'Fibers' },
+      ].map((o) => ({
+        ...o,
+        checked: !!this.state.matSel[o.id],
+        toggle: () => { this.setState({ matSel: { ...this.state.matSel, [o.id]: !this.state.matSel[o.id] } }); this.fadeApply(); },
+      })),
+
+      // destacado rotativo
+      showFeat: (this.state.appliedQuery || '').trim() === '' && this.state.appliedCat === 'all' && !this.state.appliedFreeSel && !((this.state.appliedPriceSel || {}).lt400 || (this.state.appliedPriceSel || {}).mid || (this.state.appliedPriceSel || {}).gt550) && !Object.keys(this.state.appliedMatSel || {}).some((k) => (this.state.appliedMatSel || {})[k]),
+      listOpacity: this.state.listFade ? 0 : 1,
+      listShift: this.state.listFade ? '10px' : '0px',
+      featBadge: es ? 'Destacado' : 'Featured',
+      featImgId: imgIds[this.state.featIdx],
+      featSrc: coverByImg[imgIds[this.state.featIdx]] || '',
+      featPlaceholder: placeholders[this.state.featIdx],
+      featCurName: t.products[this.state.featIdx].name,
+      featCurPrice: t.products[this.state.featIdx].price,
+      featOpacity: this.state.featFade ? 0 : 1,
+      featOpen: (e) => {
+        const i = this.state.featIdx;
+        this.openProduct({ name: t.products[i].name, price: t.products[i].price, imgId: imgIds[i], desc: descs[imgIds[i]] }, e);
+      },
+      featDots: imgIds.map((_, i) => ({
+        bg: i === this.state.featIdx ? '#ffffff' : 'rgba(255,255,255,0.45)',
+        pick: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.goFeat(i); },
+      })),
+
+      // barra lateral: búsqueda
+      sideTitle: es ? 'Buscar' : 'Search',
+      searchValue: this.state.query || '',
+      searchPlaceholder: es ? 'Buscar piezas…' : 'Search pieces…',
+      onSearch: (e) => { this.setState({ query: e.target.value }); this.fadeApply(); },
+      hasFilter: this.state.cat !== 'all',
+      filterLabel: this.state.cat === 'wood' ? (es ? 'Madera' : 'Wood') : (es ? 'Fibras y barro' : 'Fibers & clay'),
+      noResults: t.products.filter((p, i) => passes({ ...p, imgId: imgIds[i] })).length === 0,
+      noResultsMsg: es ? 'Sin resultados' : 'No results',
+
+      // menú superior: selección de material
+      pickAll: () => { this.setState({ cat: 'all', query: '', matSel: {}, openMenu: null }); this.fadeApply(); },
+      menuMats: [
+        { id: 'madera', label: es ? 'Madera' : 'Wood' },
+        { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
+        { id: 'barro', label: es ? 'Barro' : 'Clay' },
+        { id: 'fibra', label: es ? 'Fibras' : 'Fibers' },
+      ].map((c) => ({
+        ...c,
+        pick: () => { this.setState({ matSel: { [c.id]: true }, cat: 'all', query: '', openMenu: null }); this.fadeApply(); },
+        items: t.products
+          .map((p, i) => ({ name: p.name, mat: materialByImg[imgIds[i]] }))
+          .filter((p) => p.mat === c.id)
+          .map((p) => ({ label: p.name, pick: () => { this.setState({ query: p.name, cat: 'all', matSel: {}, openMenu: null }); this.fadeApply(); } })),
+      })),
+      toggleLang: () => this.setState({ lang: es ? 'en' : 'es' }),
+
+      // product zoom overlay
+      selVisible: !!sel,
+      selTop: r.top + 'px',
+      selLeft: r.left + 'px',
+      selW: r.w + 'px',
+      selH: r.h + 'px',
+      selBackdrop: selOpenFull ? '1' : '0',
+      selOpacity: sel && sel.phase === 'closing' ? '0' : '1',
+      selShadow: selOpenFull ? '0 24px 60px rgba(0,0,0,0.22)' : '0 0 0 rgba(0,0,0,0)',
+      selContentOpacity: selOpenFull ? '1' : '0',
+      selName: sel ? sel.name : '',
+      selPrice: sel ? sel.price : '',
+      selDesc: sel ? sel.desc : '',
+      selImgId: sel ? sel.imgId : 'none',
+      selCta: es ? 'Pedir por WhatsApp' : 'Order via WhatsApp',
+      openFeat1: (e) => this.openProduct({ name: t.featName, price: t.featPrice, imgId: 'hero-img', desc: descs['hero-img'] }, e),
+      openFeat2: (e) => this.openProduct({ name: t.feat2Name, price: t.feat2Price, imgId: 'prod-cuenco', desc: descs['prod-cuenco'] }, e),
+      closeProduct: () => this.closeProduct(),
+
+      // page + white transition
+      pageHome: this.state.page !== 'detail',
+      pageDetail: this.state.page === 'detail' && !!det,
+      whiteOpacity: this.state.white ? '1' : '0',
+      whitePointer: this.state.white ? 'auto' : 'none',
+      detName: det ? det.name : '',
+      detPrice: det ? det.price : '',
+      detDesc: this.state.product ? descs[this.state.product.imgId] : '',
+      detImgId: this.state.product ? this.state.product.imgId : 'none',
+      detNote: es ? 'Pieza única · hecha a mano' : 'One of a kind · handmade',
+      detBack: es ? 'Volver al catálogo' : 'Back to catalog',
+      detSrc: this.state.product ? (squareByImg[this.state.product.imgId] || '') : '',
+      mainImgId: this.state.product ? this.state.product.imgId + '-view-' + this.state.detSel : 'none',
+      mainSrc: gal[this.state.detSel] || '',
+      detThumbs: (this.state.product ? (gal.filter(Boolean).length ? gal.filter(Boolean) : ['', '', '']) : []).map((src, i) => ({
+        src: src,
+        slotId: this.state.product.imgId + '-th-' + i,
+        ph: i === 0 ? ' ' : '+',
+        border: this.state.detSel === i ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
+        pick: () => this.setState({ detSel: i }),
+      })),
+
+      // lupa 5x + lightbox
+      zoomOn: this.state.zoomOn && !!(gal[this.state.detSel]),
+      zoomBg: 'url("' + (gal[this.state.detSel] || '') + '")',
+      zoomPos: this.state.zoomX + '% ' + this.state.zoomY + '%',
+      lensLeft: Math.max(0, Math.min(66, this.state.zoomX - 17)) + '%',
+      lensTop: Math.max(0, Math.min(66, this.state.zoomY - 17)) + '%',
+      zoomMove: (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        this.setState({ zoomOn: true, zoomX: Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)), zoomY: Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100)) });
+      },
+      zoomOff: () => this.setState({ zoomOn: false }),
+      lightboxOn: this.state.lightbox && !!(gal[this.state.detSel]),
+      openLightbox: () => { if (gal[this.state.detSel]) this.setState({ lightbox: true, zoomOn: false }); },
+      closeLightbox: () => this.setState({ lightbox: false }),
+      pickImg0: () => this.setState({ detSel: 0 }),
+      pickImg1: () => this.setState({ detSel: 1 }),
+      pickImg2: () => this.setState({ detSel: 2 }),
+      thumbB0: this.state.detSel === 0 ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
+      thumbB1: this.state.detSel === 1 ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
+      thumbB2: this.state.detSel === 2 ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
+      selSrc: sel ? (coverByImg[sel.imgId] || '') : '',
+      detThumb2: this.state.product ? this.state.product.imgId + '-v2' : 'none-v2',
+      detThumb3: this.state.product ? this.state.product.imgId + '-v3' : 'none-v3',
+      detCondition: (es ? 'Nuevo · Pieza única · ' : 'New · One of a kind · ') + (this.state.product ? roundSold(soldByImg[this.state.product.imgId]) : '') + (es ? ' vendidos' : ' sold'),
+      detShipFree: es ? 'Envío gratis a todo el país' : 'Free nationwide shipping',
+      detStockColor: (this.state.product && stockByImg[this.state.product.imgId] <= 3) ? '#c0392b' : '#1d1d1f',
+      detStock: (() => {
+        const n = this.state.product ? stockByImg[this.state.product.imgId] : 0;
+        if (!n) return '';
+        if (n <= 3) return es ? ('¡Solo ' + n + ' disponibles!') : ('Only ' + n + ' left!');
+        return es ? (n + ' disponibles') : (n + ' available');
+      })(),
+      btnBuy: es ? 'Comprar ahora' : 'Buy now',
+      btnWhats: es ? 'Preguntar por WhatsApp' : 'Ask on WhatsApp',
+
+      // compra en línea (Shopify) + carrito
+      detCanBuy: !!(detShop && detShop.available),
+      detSoldOut: !!(detShop && !detShop.available),
+      detNoBuy: !detShop,
+      btnAddCart: es ? 'Agregar al carrito' : 'Add to cart',
+      soldOutMsg: es ? 'Agotado por el momento' : 'Sold out for now',
+      buyNowClick: () => { if (this.state.product) this.buyNow(this.state.product.imgId); },
+      addToCartNow: () => { if (this.state.product) this.addToCart(this.state.product.imgId); },
+      cartTitle: es ? 'Tu carrito' : 'Your cart',
+      cartCount: cartCount > 99 ? '99+' : String(cartCount),
+      cartBadgeOpacity: cartCount > 0 ? '1' : '0',
+      cartShift: this.state.cartOpen ? '0%' : '110%',
+      cartBackdropOpacity: this.state.cartOpen ? '1' : '0',
+      cartBackdropPointer: this.state.cartOpen ? 'auto' : 'none',
+      toggleCart: () => this.setState({ cartOpen: !this.state.cartOpen, openMenu: null }),
+      closeCart: () => this.setState({ cartOpen: false }),
+      cartEmpty: cartItems.length === 0,
+      cartHasItems: cartItems.length > 0,
+      cartEmptyMsg: es ? 'Tu carrito está vacío' : 'Your cart is empty',
+      cartEmptySub: es ? 'Explora el catálogo y agrega tus piezas favoritas.' : 'Browse the catalog and add your favorite pieces.',
+      cartKeep: es ? 'Seguir explorando' : 'Keep browsing',
+      cartSubtotalLabel: 'Subtotal',
+      cartSubtotal: this.fmtMoney(cartSubtotal) + ' ' + (cartItems[0] ? cartItems[0].currency : 'MXN'),
+      cartCheckout: es ? 'Finalizar compra' : 'Checkout',
+      cartSecure: es ? '🔒 Pago seguro procesado por Shopify' : '🔒 Secure checkout powered by Shopify',
+      doCheckout: () => this.checkoutCart(),
+      cartRows: cartItems.map((it) => ({
+        name: it.name,
+        img: it.img,
+        qty: String(it.qty),
+        unit: this.fmtMoney(it.unit) + ' ' + it.currency,
+        line: this.fmtMoney(it.line),
+        removeLabel: es ? 'Quitar' : 'Remove',
+        inc: () => this.setQty(it.imgId, it.qty + 1),
+        dec: () => this.setQty(it.imgId, it.qty - 1),
+        del: () => this.setQty(it.imgId, 0),
+      })),
+      ben1a: es ? 'Devolución gratis.' : 'Free returns.',
+      ben1b: es ? 'Tienes 30 días desde que lo recibes.' : 'You have 30 days after delivery.',
+      ben2a: es ? 'Compra protegida.' : 'Protected purchase.',
+      ben2b: es ? 'Recibe la pieza que esperabas o te devolvemos tu dinero.' : 'Get the piece you expected or your money back.',
+      ben3: es ? 'Hecha y empacada a mano en nuestro taller.' : 'Made and packed by hand in our workshop.',
+      descTitle: es ? 'Descripción' : 'Description',
+      revTitle: es ? 'Opiniones del producto' : 'Product reviews',
+      revAvg: '4.8',
+      revAvgStars: '★★★★★',
+      revCount: es ? '26 calificaciones' : '26 ratings',
+      revBars: [
+        { star: '5', pct: '82%' },
+        { star: '4', pct: '12%' },
+        { star: '3', pct: '6%' },
+        { star: '2', pct: '0%' },
+        { star: '1', pct: '0%' },
+      ],
+      reviews: es ? [
+        { stars: '★★★★★', date: '12 jun 2026', text: 'La pieza llegó muy bien empacada y es aún más bonita en persona. Se nota el trabajo a mano en cada detalle.', author: 'Mariana G.' },
+        { stars: '★★★★★', date: '28 may 2026', text: 'Excelente calidad de la madera y el acabado. La compré de regalo y quedaron encantados.', author: 'Luis R.' },
+        { stars: '★★★★☆', date: '9 may 2026', text: 'Muy buena pieza, el tono es un poco más oscuro que en la foto, pero eso la hace única. Envío rápido.', author: 'Carolina T.' },
+      ] : [
+        { stars: '★★★★★', date: 'Jun 12, 2026', text: 'The piece arrived very well packed and is even more beautiful in person. You can see the handwork in every detail.', author: 'Mariana G.' },
+        { stars: '★★★★★', date: 'May 28, 2026', text: 'Excellent wood quality and finish. I bought it as a gift and they loved it.', author: 'Luis R.' },
+        { stars: '★★★★☆', date: 'May 9, 2026', text: 'Very nice piece, the tone is a bit darker than in the photo, but that makes it unique. Fast shipping.', author: 'Carolina T.' },
+      ],
+      charTitle: es ? 'Características' : 'Details',
+      detDescExtra: es
+        ? 'Cada pieza se elabora individualmente, por lo que las medidas, vetas y tonos pueden variar ligeramente — eso la hace única. Se entrega con empaque protegido y guía de cuidados.'
+        : 'Each piece is made individually, so measurements, grain and tones may vary slightly — that is what makes it unique. Ships in protective packaging with a care guide.',
+      charRows: this.state.product ? [
+        { k: es ? 'Material' : 'Material', v: (es
+          ? { 'hero-img': 'Cerámica', 'prod-cuenco': 'Cerámica', 'prod-utensilios': 'Yeso cerámico', 'prod-cesta': 'Cerámica', 'prod-macetero': 'Barro vidriado', 'prod-movil': 'Cerámica vidriada' }
+          : { 'hero-img': 'Ceramic', 'prod-cuenco': 'Ceramic', 'prod-utensilios': 'Ceramic plaster', 'prod-cesta': 'Ceramic', 'prod-macetero': 'Glazed clay', 'prod-movil': 'Glazed ceramic' })[this.state.product.imgId] },
+        ...(this.state.product.imgId === 'prod-utensilios' ? [
+          { k: es ? 'Dimensiones' : 'Dimensions', v: '30 × 17 × 17 cm' },
+          { k: es ? 'Peso' : 'Weight', v: '1.8 kg' },
+        ] : []),
+        ...(this.state.product.imgId === 'prod-macetero' ? [
+          { k: es ? 'Dimensiones' : 'Dimensions', v: es ? '15 × 12 × 17 cm (servilletero)' : '15 × 12 × 17 cm (holder)' },
+          { k: es ? 'Peso' : 'Weight', v: '810 g' },
+          { k: es ? 'Incluye' : 'Includes', v: es ? '2 saleros a juego' : '2 matching salt shakers' },
+        ] : []),
+        { k: es ? 'Técnica' : 'Technique', v: es ? 'Elaborado a mano' : 'Handmade' },
+        { k: es ? 'Origen' : 'Origin', v: 'México' },
+        ...(['prod-utensilios', 'prod-macetero', 'prod-movil'].includes(this.state.product.imgId) ? [] : [
+          { k: es ? 'Acabado' : 'Finish', v: ['hero-img', 'prod-cesta'].includes(this.state.product.imgId) ? (es ? 'Óxido' : 'Oxide') : (es ? 'Aceites y ceras naturales' : 'Natural oils and waxes') },
+        ]),
+        ...(this.state.product.imgId === 'prod-movil' ? [
+          { k: es ? 'Acabado' : 'Finish', v: es ? 'Esmalte brillante' : 'Glossy glaze' },
+        ] : []),
+      ] : [],
+      backToCatalog: () => this.backToCatalog(),
+      goHome: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        if (this.state.page === 'detail') { this.backToCatalog(); }
+        else { window.scrollTo({ top: 0, behavior: 'smooth' }); this.setState({ openMenu: null }); }
+      },
+
+      menuCatalogo: open === 'catalogo',
+      panelMaxH: open ? '360px' : '0px',
+      panelOpacity: open ? '1' : '0',
+      overlayOpacity: open ? '1' : '0',
+      overlayPointer: open ? 'auto' : 'none',
+      openCatalogo: () => this.setMenu('catalogo'),
+      closeSoon: () => this.delayClose(120),
+      scheduleClose: () => this.delayClose(260),
+      cancelClose: () => this.setMenu(this.state.openMenu),
+      closeNow: () => { if (this.closeTimer) clearTimeout(this.closeTimer); this.setState({ openMenu: null }); },
+    };
+  }
+}
+</script>
+</body>
+</html>
