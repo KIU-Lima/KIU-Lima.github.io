@@ -817,7 +817,7 @@ class Component extends DCLogic {
     };
     const stockByImg = { 'hero-img': 8, 'prod-cuenco': 5, 'prod-utensilios': 12, 'prod-cesta': 3, 'prod-macetero': 6, 'prod-movil': 4 };
     const catByImg = { 'hero-img': 'wood', 'prod-cuenco': 'wood', 'prod-utensilios': 'wood', 'prod-movil': 'wood', 'prod-cesta': 'fiber', 'prod-macetero': 'fiber' };
-    const materialByImg = { 'hero-img': 'ceramica', 'prod-cuenco': 'ceramica', 'prod-utensilios': 'ceramica', 'prod-movil': 'ceramica', 'prod-cesta': 'ceramica', 'prod-macetero': 'barro' };
+    const materialByImg = { 'hero-img': 'ceramica', 'prod-cuenco': 'ceramica', 'prod-utensilios': 'ceramica', 'prod-movil': 'ceramica', 'prod-cesta': 'ceramica', 'prod-macetero': 'ceramica' };
 
     const sel = this.state.sel;
     const selOpenFull = sel && sel.phase === 'open';
@@ -1065,8 +1065,8 @@ class Component extends DCLogic {
         : 'Each piece is made individually, so measurements, grain and tones may vary slightly — that is what makes it unique. Ships in protective packaging with a care guide.',
       charRows: this.state.product ? [
         { k: es ? 'Material' : 'Material', v: (es
-          ? { 'hero-img': 'Cerámica', 'prod-cuenco': 'Cerámica', 'prod-utensilios': 'Yeso cerámico', 'prod-cesta': 'Cerámica', 'prod-macetero': 'Barro vidriado', 'prod-movil': 'Cerámica vidriada' }
-          : { 'hero-img': 'Ceramic', 'prod-cuenco': 'Ceramic', 'prod-utensilios': 'Ceramic plaster', 'prod-cesta': 'Ceramic', 'prod-macetero': 'Glazed clay', 'prod-movil': 'Glazed ceramic' })[this.state.product.imgId] },
+          ? { 'hero-img': 'Yeso cerámico', 'prod-cuenco': 'Yeso cerámico', 'prod-utensilios': 'Yeso cerámico', 'prod-cesta': 'Yeso cerámico', 'prod-macetero': 'Cerámica', 'prod-movil': 'Yeso cerámico' }
+          : { 'hero-img': 'Ceramic plaster', 'prod-cuenco': 'Ceramic plaster', 'prod-utensilios': 'Ceramic plaster', 'prod-cesta': 'Ceramic plaster', 'prod-macetero': 'Ceramic', 'prod-movil': 'Ceramic plaster' })[this.state.product.imgId] },
         ...(this.state.product.imgId === 'prod-utensilios' ? [
           { k: es ? 'Dimensiones' : 'Dimensions', v: '30 × 17 × 17 cm' },
           { k: es ? 'Peso' : 'Weight', v: '1.8 kg' },
