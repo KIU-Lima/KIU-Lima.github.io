@@ -213,11 +213,6 @@
             <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; text-align: left; padding: 0 4px;">
               <span style="font-size: 16px; font-weight: 600; color: #1d1d1f;">{{ p.name }}</span>
               <span style="font-size: 13.5px; font-weight: 300; line-height: 1.45; color: #6e6e73;">{{ p.shortDesc }}</span>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 14px; color: #e8930c; letter-spacing: 1px;">{{ p.stars }}</span>
-                <span style="font-size: 13px; color: #0071e3;">{{ p.ratingCount }}</span>
-              </div>
-              <span style="font-size: 12.5px; font-weight: 400; color: #86868b;">{{ p.sold }}</span>
               <span style="font-size: 15px; font-weight: 600; color: #1d1d1f;">{{ p.price }}</span>
             </div>
           </article>
@@ -330,39 +325,10 @@
         <!-- reseñas -->
         <div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px; margin-top: 24px;">
           <h2 style="font-size: 22px; font-weight: 600; color: #1d1d1f; margin: 0 0 24px;">{{ revTitle }}</h2>
-          <div style="display: grid; grid-template-columns: 220px 1fr; gap: 48px; align-items: start;">
-            <!-- resumen -->
-            <div style="display: flex; flex-direction: column; gap: 14px;">
-              <div style="display: flex; align-items: baseline; gap: 10px;">
-                <span style="font-size: 52px; font-weight: 600; color: #1d1d1f; line-height: 1;">{{ revAvg }}</span>
-                <span style="font-size: 14px; color: #86868b;">/ 5</span>
-              </div>
-              <span style="font-size: 18px; color: #0071e3; letter-spacing: 2px;">{{ revAvgStars }}</span>
-              <span style="font-size: 13px; color: #86868b;">{{ revCount }}</span>
-              <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 6px;">
-                <sc-for list="{{ revBars }}" as="b" hint-placeholder-count="5">
-                  <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="font-size: 12px; color: #86868b; width: 10px; text-align: right;">{{ b.star }}</span>
-                    <div style="flex: 1; height: 6px; border-radius: 999px; background: rgba(0,0,0,0.08); overflow: hidden;">
-                      <div style="height: 100%; border-radius: 999px; background: #0071e3; width: {{ b.pct }};"></div>
-                    </div>
-                  </div>
-                </sc-for>
-              </div>
-            </div>
-            <!-- lista -->
-            <div style="display: flex; flex-direction: column;">
-              <sc-for list="{{ reviews }}" as="r" hint-placeholder-count="3">
-                <div style="display: flex; flex-direction: column; gap: 8px; padding: 20px 0; border-bottom: 1px solid rgba(0,0,0,0.08);">
-                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
-                    <span style="font-size: 14px; color: #0071e3; letter-spacing: 2px;">{{ r.stars }}</span>
-                    <span style="font-size: 12.5px; color: #86868b;">{{ r.date }}</span>
-                  </div>
-                  <p style="font-size: 15px; line-height: 1.6; color: #1d1d1f; margin: 0; font-weight: 300;">{{ r.text }}</p>
-                  <span style="font-size: 13px; color: #86868b;">{{ r.author }}</span>
-                </div>
-              </sc-for>
-            </div>
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 26px 0 34px; text-align: center;">
+            <span style="font-size: 26px; color: #c7c7cc; letter-spacing: 6px;">☆☆☆☆☆</span>
+            <p style="font-size: 17px; font-weight: 600; color: #1d1d1f; margin: 10px 0 0;">{{ revEmptyTitle }}</p>
+            <p style="font-size: 14px; color: #6e6e73; margin: 0; max-width: 52ch; font-weight: 300; line-height: 1.6;">{{ revEmptyDesc }}</p>
           </div>
         </div>
       </div>
@@ -762,7 +728,6 @@ class Component extends DCLogic {
     };
     t.products.forEach((p, i) => { catalogMap[imgIds[i]] = { name: p.name, price: p.price }; });
 
-    const ratingByImg = { 'hero-img': { stars: '★★★★★', n: 18 }, 'prod-cuenco': { stars: '★★★★☆', n: 12 }, 'prod-utensilios': { stars: '★★★★★', n: 26 }, 'prod-cesta': { stars: '★★★★☆', n: 9 }, 'prod-macetero': { stars: '★★★★★', n: 14 }, 'prod-movil': { stars: '★★★★☆', n: 7 } };
     // fotos reales: portada (ancha) y cuadrada (detalle)
     const coverByImg = { 'hero-img': 'uploads/protada_rectangular.png', 'prod-cuenco': 'uploads/silencio-portada.png', 'prod-utensilios': 'uploads/david-portada.png', 'prod-macetero': 'uploads/burro-portada.png', 'prod-movil': 'uploads/puerco-portada.png', 'prod-cesta': 'uploads/elefantes-portada.png' };
     const squareByImg = { 'hero-img': 'uploads/1.png', 'prod-cuenco': 'uploads/4-e6379f43.png', 'prod-utensilios': 'uploads/david-4.png', 'prod-macetero': 'uploads/burro-1.png', 'prod-movil': 'uploads/puerco-4.png', 'prod-cesta': 'uploads/elefantes-1.png' };
@@ -795,11 +760,6 @@ class Component extends DCLogic {
       if (anyMat && !msel[materialByImg[p.imgId]]) return false;
       return true;
     };
-    const roundSold = (n) => {
-      const base = n >= 100 ? Math.floor(n / 100) * 100 : Math.floor(n / 10) * 10;
-      return Math.max(base, 10) + '+';
-    };
-    const soldByImg = { 'hero-img': 42, 'prod-cuenco': 31, 'prod-utensilios': 58, 'prod-cesta': 24, 'prod-macetero': 37, 'prod-movil': 19 };
     const stockByImg = { 'hero-img': 8, 'prod-cuenco': 5, 'prod-utensilios': 12, 'prod-cesta': 3, 'prod-macetero': 6, 'prod-movil': 4 };
     const catByImg = { 'hero-img': 'wood', 'prod-cuenco': 'wood', 'prod-utensilios': 'wood', 'prod-movil': 'wood', 'prod-cesta': 'fiber', 'prod-macetero': 'fiber' };
     const materialByImg = { 'hero-img': 'ceramica', 'prod-cuenco': 'ceramica', 'prod-utensilios': 'ceramica', 'prod-movil': 'ceramica', 'prod-cesta': 'ceramica', 'prod-macetero': 'barro' };
@@ -832,10 +792,7 @@ class Component extends DCLogic {
           placeholder: placeholders[i],
           category: catByImg[imgIds[i]],
           src: coverByImg[imgIds[i]] || '',
-          sold: roundSold(soldByImg[imgIds[i]]) + (es ? ' vendidos' : ' sold'),
           shortDesc: descs[imgIds[i]],
-          stars: ratingByImg[imgIds[i]].stars,
-          ratingCount: '(' + ratingByImg[imgIds[i]].n + ')',
           open: (e) => this.openProduct({ name: p.name, price: p.price, imgId: imgIds[i], desc: descs[imgIds[i]] }, e),
         }))
         .filter((p) => passes(p))
@@ -984,7 +941,7 @@ class Component extends DCLogic {
       selSrc: sel ? (coverByImg[sel.imgId] || '') : '',
       detThumb2: this.state.product ? this.state.product.imgId + '-v2' : 'none-v2',
       detThumb3: this.state.product ? this.state.product.imgId + '-v3' : 'none-v3',
-      detCondition: (es ? 'Nuevo · Pieza única · ' : 'New · One of a kind · ') + (this.state.product ? roundSold(soldByImg[this.state.product.imgId]) : '') + (es ? ' vendidos' : ' sold'),
+      detCondition: es ? 'Nuevo · Pieza única · Hecho a mano' : 'New · One of a kind · Handmade',
       detShipFree: es ? 'Envío gratis a todo el país' : 'Free nationwide shipping',
       detStockColor: (this.state.product && stockByImg[this.state.product.imgId] <= 3) ? '#c0392b' : '#1d1d1f',
       detStock: (() => {
@@ -1040,25 +997,10 @@ class Component extends DCLogic {
       ben3: es ? 'Hecha y empacada a mano en nuestro taller.' : 'Made and packed by hand in our workshop.',
       descTitle: es ? 'Descripción' : 'Description',
       revTitle: es ? 'Opiniones del producto' : 'Product reviews',
-      revAvg: '4.8',
-      revAvgStars: '★★★★★',
-      revCount: es ? '26 calificaciones' : '26 ratings',
-      revBars: [
-        { star: '5', pct: '82%' },
-        { star: '4', pct: '12%' },
-        { star: '3', pct: '6%' },
-        { star: '2', pct: '0%' },
-        { star: '1', pct: '0%' },
-      ],
-      reviews: es ? [
-        { stars: '★★★★★', date: '12 jun 2026', text: 'La pieza llegó muy bien empacada y es aún más bonita en persona. Se nota el trabajo a mano en cada detalle.', author: 'Mariana G.' },
-        { stars: '★★★★★', date: '28 may 2026', text: 'Excelente calidad de la madera y el acabado. La compré de regalo y quedaron encantados.', author: 'Luis R.' },
-        { stars: '★★★★☆', date: '9 may 2026', text: 'Muy buena pieza, el tono es un poco más oscuro que en la foto, pero eso la hace única. Envío rápido.', author: 'Carolina T.' },
-      ] : [
-        { stars: '★★★★★', date: 'Jun 12, 2026', text: 'The piece arrived very well packed and is even more beautiful in person. You can see the handwork in every detail.', author: 'Mariana G.' },
-        { stars: '★★★★★', date: 'May 28, 2026', text: 'Excellent wood quality and finish. I bought it as a gift and they loved it.', author: 'Luis R.' },
-        { stars: '★★★★☆', date: 'May 9, 2026', text: 'Very nice piece, the tone is a bit darker than in the photo, but that makes it unique. Fast shipping.', author: 'Carolina T.' },
-      ],
+      revEmptyTitle: es ? 'Sé el primero en dejar tu opinión' : 'Be the first to leave a review',
+      revEmptyDesc: es
+        ? 'Después de tu compra te enviaremos un correo para que nos cuentes qué te pareció tu pieza.'
+        : 'After your purchase we will email you so you can tell us what you think of your piece.',
       charTitle: es ? 'Características' : 'Details',
       detDescExtra: es
         ? 'Cada pieza se elabora individualmente, por lo que las medidas, vetas y tonos pueden variar ligeramente — eso la hace única. Se entrega con empaque protegido y guía de cuidados.'
