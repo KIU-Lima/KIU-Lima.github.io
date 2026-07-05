@@ -23,6 +23,50 @@
     .kiu-badge:hover { background: #0071e3 !important; }
     .kiu-filt { transition: color 0.2s ease; }
     .kiu-filt:hover { color: #1d1d1f !important; }
+
+    /* ===== Responsive (móvil / tablet) ===== */
+    @media (max-width: 900px) {
+      /* nav compacta: logo + buscador + EN + carrito */
+      .kiu-nav-in { padding: 0 14px !important; gap: 10px !important; }
+      .kiu-logo { font-size: 22px !important; }
+      .kiu-nav-search { flex: 1 1 auto !important; width: auto !important; min-width: 0 !important; font-size: 16px !important; }
+      .kiu-nav-cat, .kiu-nav-con { display: none !important; }
+      .kiu-nav-lang { margin-left: 2px !important; }
+      /* catálogo: filtros arriba en fila, productos abajo */
+      #catalogo { padding: 104px 18px 72px !important; }
+      .kiu-cat-head { flex-wrap: wrap !important; gap: 10px !important; margin-bottom: 36px !important; }
+      .kiu-cat-title { font-size: 30px !important; }
+      .kiu-cat-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
+      .kiu-filters { position: static !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 18px 32px !important; border-right: none !important; border-bottom: 1px solid rgba(0,0,0,0.1) !important; padding: 0 0 22px !important; }
+      .kiu-filters-title { flex: 0 0 100%; }
+      .kiu-brand { padding: 52px 24px !important; }
+      .kiu-brand p { font-size: 20px !important; }
+      /* página de producto: todo en una columna */
+      .kiu-det { padding: 82px 14px 56px !important; }
+      .kiu-det-grid { grid-template-columns: 1fr !important; gap: 16px !important; padding: 14px !important; }
+      .kiu-det-main { order: 1; height: auto !important; aspect-ratio: 1 / 1; }
+      .kiu-det-thumbs { order: 2; flex-direction: row !important; overflow-x: auto; padding-bottom: 2px; }
+      .kiu-det-thumbs > div { flex: 0 0 58px; width: 58px; }
+      .kiu-det-buy { order: 3; padding: 18px !important; }
+      .kiu-det-price { font-size: 28px !important; }
+      .kiu-det-zoom, .kiu-det-lens { display: none !important; }
+      .kiu-det-info { grid-template-columns: 1fr !important; margin-top: 16px !important; }
+      .kiu-det-info > div { padding: 22px !important; }
+      .kiu-det-rev { padding: 22px !important; margin-top: 16px !important; }
+      /* contacto en una columna */
+      #contacto { padding: 60px 20px 44px !important; }
+      .kiu-foot-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+      .kiu-foot-right { border-left: none !important; padding-left: 0 !important; border-top: 1px solid rgba(0,0,0,0.15); padding-top: 26px; }
+    }
+    @media (max-width: 700px) {
+      /* teléfonos: 1 tarjeta por fila y destacado más alto */
+      .kiu-prod-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+      .kiu-feat { aspect-ratio: 16 / 10 !important; }
+      .kiu-feat-pill { left: 12px !important; bottom: 12px !important; max-width: calc(100% - 24px); box-sizing: border-box; padding: 9px 14px !important; gap: 6px 10px !important; border-radius: 16px !important; flex-wrap: wrap !important; }
+      .kiu-feat-pill span:first-child { font-size: 13.5px !important; }
+      .kiu-feat-pill span:last-child { font-size: 12.5px !important; }
+      .kiu-feat-dots { right: 12px !important; bottom: auto !important; top: 14px !important; }
+    }
   </style>
 </helmet>
 
@@ -93,15 +137,15 @@
 
   <!-- NAV -->
   <nav onMouseLeave="{{ scheduleClose }}" style="position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255,255,255,0.8); backdrop-filter: blur(18px) saturate(1.6); -webkit-backdrop-filter: blur(18px) saturate(1.6); border-bottom: 1px solid rgba(0,0,0,0.1);">
-    <div style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; height: 62px; box-sizing: border-box;">
+    <div class="kiu-nav-in" style="max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 56px; height: 62px; box-sizing: border-box;">
       <a href="#" onClick="{{ goHome }}" style="display: flex; align-items: baseline; gap: 10px; text-decoration: none; cursor: pointer;">
-        <span style="font-size: 28px; font-weight: 700; letter-spacing: 0.2em; color: #1d1d1f;">KIU</span>
+        <span class="kiu-logo" style="font-size: 28px; font-weight: 700; letter-spacing: 0.2em; color: #1d1d1f;">KIU</span>
       </a>
-      <input value="{{ searchValue }}" onChange="{{ onSearch }}" placeholder="{{ searchPlaceholder }}" style="font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 8px 16px; border: 1px solid rgba(0,0,0,0.15); border-radius: 999px; background: #f5f5f7; color: #1d1d1f; outline: none; width: 300px; box-sizing: border-box; transition: all 0.25s ease;" style-focus="border-color: #0071e3; background: #ffffff; width: 340px;">
+      <input class="kiu-nav-search" value="{{ searchValue }}" onChange="{{ onSearch }}" placeholder="{{ searchPlaceholder }}" style="font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 8px 16px; border: 1px solid rgba(0,0,0,0.15); border-radius: 999px; background: #f5f5f7; color: #1d1d1f; outline: none; width: 300px; box-sizing: border-box; transition: all 0.25s ease;" style-focus="border-color: #0071e3; background: #ffffff; width: 340px;">
       <div style="display: flex; align-items: center; gap: 4px;">
-        <a class="kiu-hov" href="#catalogo" onMouseEnter="{{ openCatalogo }}" style="font-size: 14px; font-weight: 500; color: #1d1d1f; text-decoration: none; padding: 10px 16px; border-radius: 999px; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ navCatalogo }}</a>
-        <a class="kiu-hov" href="#contacto" onMouseEnter="{{ closeSoon }}" style="font-size: 14px; font-weight: 500; color: #1d1d1f; text-decoration: none; padding: 10px 16px; border-radius: 999px; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ navContacto }}</a>
-        <button onClick="{{ toggleLang }}" style="font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; padding: 7px 15px; margin-left: 14px; border: 1px solid rgba(0,0,0,0.45); border-radius: 999px; background: transparent; color: #0071e3; cursor: pointer; transition: all 0.25s ease;" style-hover="background: #0071e3; color: #ffffff;">{{ langLabel }}</button>
+        <a class="kiu-hov kiu-nav-cat" href="#catalogo" onMouseEnter="{{ openCatalogo }}" style="font-size: 14px; font-weight: 500; color: #1d1d1f; text-decoration: none; padding: 10px 16px; border-radius: 999px; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ navCatalogo }}</a>
+        <a class="kiu-hov kiu-nav-con" href="#contacto" onMouseEnter="{{ closeSoon }}" style="font-size: 14px; font-weight: 500; color: #1d1d1f; text-decoration: none; padding: 10px 16px; border-radius: 999px; transition: color 0.25s ease;" style-hover="color: #0071e3;">{{ navContacto }}</a>
+        <button class="kiu-nav-lang" onClick="{{ toggleLang }}" style="font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; padding: 7px 15px; margin-left: 14px; border: 1px solid rgba(0,0,0,0.45); border-radius: 999px; background: transparent; color: #0071e3; cursor: pointer; transition: all 0.25s ease;" style-hover="background: #0071e3; color: #ffffff;">{{ langLabel }}</button>
         <button onClick="{{ toggleCart }}" title="{{ cartTitle }}" style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; margin-left: 8px; border: none; border-radius: 999px; background: transparent; cursor: pointer; transition: background 0.25s ease;" style-hover="background: rgba(0,0,0,0.06);">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l1.2 13H4.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
           <span style="position: absolute; top: 0px; right: -2px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 999px; background: #0071e3; color: #ffffff; font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; opacity: {{ cartBadgeOpacity }}; transition: opacity 0.25s ease;">{{ cartCount }}</span>
@@ -139,8 +183,8 @@
   <!-- CATALOGO (primero) -->
   <section id="catalogo" data-screen-label="Catálogo" style="padding: 136px 64px 128px;">
     <div style="max-width: 1520px; margin: 0 auto;">
-      <div style="display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 0 0 72px; animation: kiuFadeUp 0.6s ease both;">
-        <h1 style="font-size: 38px; font-weight: 600; letter-spacing: -0.02em; color: #1d1d1f; margin: 0;">{{ catTitle }}</h1>
+      <div class="kiu-cat-head" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 0 0 72px; animation: kiuFadeUp 0.6s ease both;">
+        <h1 class="kiu-cat-title" style="font-size: 38px; font-weight: 600; letter-spacing: -0.02em; color: #1d1d1f; margin: 0;">{{ catTitle }}</h1>
         <div style="display: flex; align-items: center; gap: 12px;">
           <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
             <span style="font-size: 13px; color: #86868b; font-weight: 300;">{{ noResultsMsg }}</span>
@@ -153,9 +197,9 @@
       </div>
 
       <!-- filtros + catálogo centrado -->
-      <div style="display: grid; grid-template-columns: 180px 1fr; gap: 64px; align-items: start; animation: kiuFadeUp 0.6s ease 0.1s both;">
-        <aside style="position: sticky; top: 110px; display: flex; flex-direction: column; gap: 22px; border-right: 1px solid rgba(0,0,0,0.1); padding: 8px 28px 24px 0;">
-          <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">{{ filtersTitle }}</span>
+      <div class="kiu-cat-grid" style="display: grid; grid-template-columns: 180px 1fr; gap: 64px; align-items: start; animation: kiuFadeUp 0.6s ease 0.1s both;">
+        <aside class="kiu-filters" style="position: sticky; top: 110px; display: flex; flex-direction: column; gap: 22px; border-right: 1px solid rgba(0,0,0,0.1); padding: 8px 28px 24px 0;">
+          <span class="kiu-filters-title" style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">{{ filtersTitle }}</span>
           <div style="display: flex; flex-direction: column; gap: 10px;">
             <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ priceTitle }}</span>
             <sc-for list="{{ priceOpts }}" as="f" hint-placeholder-count="3">
@@ -187,16 +231,16 @@
 
         <!-- destacado rotativo -->
         <sc-if value="{{ showFeat }}" hint-placeholder-val="{{ true }}">
-        <article onClick="{{ featOpen }}" style="position: relative; cursor: pointer; border-radius: 16px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); aspect-ratio: 21 / 9;">
+        <article class="kiu-feat" onClick="{{ featOpen }}" style="position: relative; cursor: pointer; border-radius: 16px; overflow: hidden; border: 1px solid rgba(0,0,0,0.1); aspect-ratio: 21 / 9;">
           <div style="position: absolute; inset: 0; opacity: {{ featOpacity }}; transition: opacity 0.5s ease;">
             <image-slot id="{{ featImgId }}" src="{{ featSrc }}" shape="rect" placeholder="{{ featPlaceholder }}" style="width: 100%; height: 100%; display: block;"></image-slot>
           </div>
           <span class="kiu-badge" style="position: absolute; top: 20px; left: 20px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: #ffffff; background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 999px; transition: background 0.3s ease;">{{ featBadge }}</span>
-          <div style="position: absolute; left: 20px; bottom: 20px; display: flex; align-items: baseline; gap: 14px; background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 20px; border-radius: 999px; opacity: {{ featOpacity }}; transition: opacity 0.5s ease;">
+          <div class="kiu-feat-pill" style="position: absolute; left: 20px; bottom: 20px; display: flex; align-items: baseline; gap: 14px; background: rgba(255,255,255,0.85); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 20px; border-radius: 999px; opacity: {{ featOpacity }}; transition: opacity 0.5s ease;">
             <span style="font-size: 16px; font-weight: 600; color: #1d1d1f;">{{ featCurName }}</span>
             <span style="font-size: 14px; font-weight: 500; color: #0071e3;">{{ featCurPrice }}</span>
           </div>
-          <div style="position: absolute; right: 20px; bottom: 26px; display: flex; gap: 8px;">
+          <div class="kiu-feat-dots" style="position: absolute; right: 20px; bottom: 26px; display: flex; gap: 8px;">
             <sc-for list="{{ featDots }}" as="d" hint-placeholder-count="6">
               <button onClick="{{ d.pick }}" style="width: 8px; height: 8px; padding: 0; border: none; border-radius: 50%; background: {{ d.bg }}; cursor: pointer; transition: background 0.3s ease;"></button>
             </sc-for>
@@ -204,7 +248,7 @@
         </article>
         </sc-if>
 
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 48px;">
+      <div class="kiu-prod-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 48px;">
         <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
           <article onClick="{{ p.open }}" style="grid-column: {{ p.span }}; cursor: pointer; display: flex; flex-direction: column; gap: 18px; transition: transform 0.35s cubic-bezier(0.33, 1, 0.5, 1);" style-hover="transform: translateY(-6px);">
             <div style="border-radius: 16px; overflow: hidden; aspect-ratio: {{ p.aspect }}; border: 1px solid rgba(0,0,0,0.1);">
@@ -224,20 +268,20 @@
   </section>
 
   <!-- BANDA BREVE DE MARCA -->
-  <section style="background: #ffffff; padding: 72px 56px;">
+  <section class="kiu-brand" style="background: #ffffff; padding: 72px 56px;">
     <p style="max-width: 900px; margin: 0 auto; text-align: center; font-size: 26px; line-height: 1.5; font-weight: 300; color: #1d1d1f; text-wrap: balance;">{{ brandLine }}</p>
   </section>
   </sc-if>
 
   <!-- PAGINA DE PRODUCTO -->
   <sc-if value="{{ pageDetail }}" hint-placeholder-val="{{ false }}">
-    <section data-screen-label="Producto" style="padding: 96px 56px 96px; min-height: 72vh; box-sizing: border-box; animation: kiuFadeUp 0.6s ease both;">
+    <section class="kiu-det" data-screen-label="Producto" style="padding: 96px 56px 96px; min-height: 72vh; box-sizing: border-box; animation: kiuFadeUp 0.6s ease both;">
       <div style="max-width: 1240px; margin: 0 auto;">
         <button onClick="{{ backToCatalog }}" style="font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: #6e6e73; background: transparent; border: none; padding: 8px 0; cursor: pointer; transition: color 0.25s ease;" style-hover="color: #0071e3;">← {{ detBack }}</button>
 
-        <div style="position: relative; display: grid; grid-template-columns: 76px 1fr 380px; gap: 24px; align-items: start; margin-top: 16px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 28px;">
+        <div class="kiu-det-grid" style="position: relative; display: grid; grid-template-columns: 76px 1fr 380px; gap: 24px; align-items: start; margin-top: 16px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 28px;">
           <!-- miniaturas -->
-          <div style="display: flex; flex-direction: column; gap: 12px;">
+          <div class="kiu-det-thumbs" style="display: flex; flex-direction: column; gap: 12px;">
             <sc-for list="{{ detThumbs }}" as="th" hint-placeholder-count="3">
               <div onClick="{{ th.pick }}" style="cursor: pointer; border-radius: 10px; overflow: hidden; border: {{ th.border }}; aspect-ratio: 1;">
                 <image-slot id="{{ th.slotId }}" src="{{ th.src }}" shape="rect" placeholder="{{ th.ph }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
@@ -246,23 +290,23 @@
           </div>
 
           <!-- foto principal con lupa 5x y lightbox -->
-          <div onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; border-radius: 14px; overflow: hidden; background: #f5f5f7; height: 540px; cursor: zoom-in;">
+          <div class="kiu-det-main" onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; border-radius: 14px; overflow: hidden; background: #f5f5f7; height: 540px; cursor: zoom-in;">
             <image-slot id="{{ mainImgId }}" src="{{ mainSrc }}" shape="rect" placeholder="{{ detName }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
             <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
-              <div style="position: absolute; pointer-events: none; width: 34%; height: 34%; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
+              <div class="kiu-det-lens" style="position: absolute; pointer-events: none; width: 34%; height: 34%; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
             </sc-if>
           </div>
 
           <!-- panel de zoom estilo Amazon (a la derecha, sobre la columna de compra) -->
           <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
-            <div style="position: absolute; z-index: 5; top: 28px; right: 28px; width: 380px; height: 540px; border-radius: 14px; overflow: hidden; background-color: #ffffff; border: 1px solid rgba(0,0,0,0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.18); background-image: {{ zoomBg }}; background-repeat: no-repeat; background-size: 300%; background-position: {{ zoomPos }}; pointer-events: none;"></div>
+            <div class="kiu-det-zoom" style="position: absolute; z-index: 5; top: 28px; right: 28px; width: 380px; height: 540px; border-radius: 14px; overflow: hidden; background-color: #ffffff; border: 1px solid rgba(0,0,0,0.15); box-shadow: 0 20px 50px rgba(0,0,0,0.18); background-image: {{ zoomBg }}; background-repeat: no-repeat; background-size: 300%; background-position: {{ zoomPos }}; pointer-events: none;"></div>
           </sc-if>
 
           <!-- columna de compra -->
-          <div style="display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; padding: 24px;">
+          <div class="kiu-det-buy" style="display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; padding: 24px;">
             <span style="font-size: 13px; color: #86868b; font-weight: 400;">{{ detCondition }}</span>
             <h1 style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em; color: #1d1d1f; margin: 0; line-height: 1.25;">{{ detName }}</h1>
-            <span style="font-size: 34px; font-weight: 500; color: #1d1d1f;">{{ detPrice }}</span>
+            <span class="kiu-det-price" style="font-size: 34px; font-weight: 500; color: #1d1d1f;">{{ detPrice }}</span>
             <span style="font-size: 14px; font-weight: 600; color: #1d873c;">{{ detShipFree }}</span>
             <span style="font-size: 14px; font-weight: 600; color: {{ detStockColor }};">{{ detStock }}</span>
             <!-- producto conectado a Shopify: compra directa + carrito -->
@@ -306,7 +350,7 @@
         </sc-if>
 
         <!-- descripción y características -->
-        <div style="display: grid; grid-template-columns: 1fr 380px; gap: 24px; margin-top: 24px;">
+        <div class="kiu-det-info" style="display: grid; grid-template-columns: 1fr 380px; gap: 24px; margin-top: 24px;">
           <div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px;">
             <h2 style="font-size: 22px; font-weight: 600; color: #1d1d1f; margin: 0 0 16px;">{{ descTitle }}</h2>
             <p style="font-size: 16px; line-height: 1.75; color: #6e6e73; margin: 0; font-weight: 300;">{{ detDesc }} {{ detDescExtra }}</p>
@@ -323,7 +367,7 @@
         </div>
 
         <!-- reseñas -->
-        <div style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px; margin-top: 24px;">
+        <div class="kiu-det-rev" style="background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 32px; margin-top: 24px;">
           <h2 style="font-size: 22px; font-weight: 600; color: #1d1d1f; margin: 0 0 24px;">{{ revTitle }}</h2>
           <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 26px 0 34px; text-align: center;">
             <span style="font-size: 26px; color: #c7c7cc; letter-spacing: 6px;">☆☆☆☆☆</span>
@@ -337,12 +381,12 @@
 
   <!-- CONTACTO -->
   <footer id="contacto" data-screen-label="Contacto" style="padding: 88px 56px 64px;">
-    <div style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center;">
+    <div class="kiu-foot-grid" style="max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: center;">
       <div>
         <h2 style="font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: #1d1d1f; margin: 0 0 14px; text-wrap: balance;">{{ contactTitle }}</h2>
         <p style="font-size: 16px; line-height: 1.65; color: #6e6e73; margin: 0; max-width: 46ch; font-weight: 300;">{{ contactDesc }}</p>
       </div>
-      <div style="border-left: 1px solid rgba(0,0,0,0.15); padding-left: 48px; display: flex; flex-direction: column; gap: 18px;">
+      <div class="kiu-foot-right" style="border-left: 1px solid rgba(0,0,0,0.15); padding-left: 48px; display: flex; flex-direction: column; gap: 18px;">
         <div>
           <span style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">Email</span>
           <p style="font-size: 15px; color: #1d1d1f; margin: 4px 0 0;">hola@kiu-artesanias.mx</p>
@@ -431,13 +475,20 @@ class Component extends DCLogic {
     this.clearSelTimers();
     // destino: el visor principal de la página de producto (elemento compartido)
     const vw = window.innerWidth;
-    const containerW = Math.min(1240, vw - 112);
-    const target = {
-      top: 178,
-      left: (vw - containerW) / 2 + 28 + 76 + 24,
-      w: Math.max(320, containerW - 56 - 76 - 380 - 48),
-      h: 540,
-    };
+    let target;
+    if (vw <= 900) {
+      // móvil: el visor va a ancho completo (sección 14px + tarjeta 14px) y es cuadrado
+      const w = vw - 2 * (14 + 14);
+      target = { top: 150, left: 28, w: w, h: w };
+    } else {
+      const containerW = Math.min(1240, vw - 112);
+      target = {
+        top: 178,
+        left: (vw - containerW) / 2 + 28 + 76 + 24,
+        w: Math.max(320, containerW - 56 - 76 - 380 - 48),
+        h: 540,
+      };
+    }
     this.setState({ sel: { ...prod, rect: { top: rect.top, left: rect.left, w: rect.width, h: rect.height }, target, phase: 'start' } });
     requestAnimationFrame(() => requestAnimationFrame(() => {
       if (this.state.sel) this.setState({ sel: { ...this.state.sel, phase: 'open' } });
