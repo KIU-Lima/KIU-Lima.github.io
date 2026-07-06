@@ -796,7 +796,7 @@ class Component extends DCLogic {
       'prod-cesta': ['uploads/elefantes-1.png', 'uploads/elefantes-2.png', 'uploads/elefantes-3.png', 'uploads/elefantes-4.png', 'uploads/elefantes-5.png'],
     };
     const gal = this.state.product ? (galleryByImg[this.state.product.imgId] || ['', '', '']) : ['', '', ''];
-    const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': false, 'prod-cesta': true, 'prod-macetero': false, 'prod-movil': true };
+    const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': true, 'prod-cesta': true, 'prod-macetero': true, 'prod-movil': true };
     const priceNum = (p) => parseInt(String(p).replace(/[^0-9]/g, ''), 10);
     const passes = (p) => {
       const st = this.state;
