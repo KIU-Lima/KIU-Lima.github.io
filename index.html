@@ -157,8 +157,8 @@
     <div onMouseEnter="{{ cancelClose }}" onMouseLeave="{{ scheduleClose }}" style="overflow: hidden; max-height: {{ panelMaxH }}; opacity: {{ panelOpacity }}; transition: max-height 0.55s cubic-bezier(0.33, 1, 0.5, 1), opacity 0.4s ease; border-top: 1px solid rgba(0,0,0,0.06);">
       <div style="max-width: 1240px; margin: 0 auto; padding: 36px 56px 46px; box-sizing: border-box;">
         <sc-if value="{{ menuCatalogo }}" hint-placeholder-val="{{ false }}">
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr) 1.15fr; gap: 40px; animation: kiuFadeUp 0.5s ease both;">
-            <sc-for list="{{ menuMats }}" as="col" hint-placeholder-count="4">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 40px; animation: kiuFadeUp 0.5s ease both;">
+            <sc-for list="{{ menuMats }}" as="col" hint-placeholder-count="2">
               <div>
                 <button class="kiu-hov" onClick="{{ col.pick }}" style="font-family: 'DM Sans', sans-serif; text-align: left; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #86868b; font-weight: 600; margin: 0 0 16px; background: transparent; border: none; padding: 0; cursor: pointer; transition: color 0.25s ease;">{{ col.label }} →</button>
                 <div style="display: flex; flex-direction: column; gap: 12px;">
@@ -817,7 +817,7 @@ class Component extends DCLogic {
     };
     const stockByImg = { 'hero-img': 8, 'prod-cuenco': 5, 'prod-utensilios': 12, 'prod-cesta': 3, 'prod-macetero': 6, 'prod-movil': 4 };
     const catByImg = { 'hero-img': 'wood', 'prod-cuenco': 'wood', 'prod-utensilios': 'wood', 'prod-movil': 'wood', 'prod-cesta': 'fiber', 'prod-macetero': 'fiber' };
-    const materialByImg = { 'hero-img': 'ceramica', 'prod-cuenco': 'ceramica', 'prod-utensilios': 'ceramica', 'prod-movil': 'ceramica', 'prod-cesta': 'ceramica', 'prod-macetero': 'ceramica' };
+    const materialByImg = { 'hero-img': 'yeso', 'prod-cuenco': 'yeso', 'prod-utensilios': 'yeso', 'prod-movil': 'yeso', 'prod-cesta': 'yeso', 'prod-macetero': 'ceramica' };
 
     const sel = this.state.sel;
     const selOpenFull = sel && sel.phase === 'open';
@@ -875,10 +875,8 @@ class Component extends DCLogic {
       toggleFree: () => { this.setState({ freeSel: !this.state.freeSel }); this.fadeApply(); },
       matTitle: es ? 'Materiales' : 'Materials',
       matOpts: [
-        { id: 'madera', label: es ? 'Madera' : 'Wood' },
         { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
-        { id: 'barro', label: es ? 'Barro' : 'Clay' },
-        { id: 'fibra', label: es ? 'Fibras' : 'Fibers' },
+        { id: 'yeso', label: es ? 'Yeso cerámico' : 'Ceramic plaster' },
       ].map((o) => ({
         ...o,
         checked: !!this.state.matSel[o.id],
@@ -918,10 +916,8 @@ class Component extends DCLogic {
       // menú superior: selección de material
       pickAll: () => { this.setState({ cat: 'all', query: '', matSel: {}, openMenu: null }); this.fadeApply(); },
       menuMats: [
-        { id: 'madera', label: es ? 'Madera' : 'Wood' },
         { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
-        { id: 'barro', label: es ? 'Barro' : 'Clay' },
-        { id: 'fibra', label: es ? 'Fibras' : 'Fibers' },
+        { id: 'yeso', label: es ? 'Yeso cerámico' : 'Ceramic plaster' },
       ].map((c) => ({
         ...c,
         pick: () => { this.setState({ matSel: { [c.id]: true }, cat: 'all', query: '', openMenu: null }); this.fadeApply(); },
