@@ -285,17 +285,26 @@
           <!-- miniaturas -->
           <div class="kiu-det-thumbs" style="display: flex; flex-direction: column; gap: 12px;">
             <sc-for list="{{ detThumbs }}" as="th" hint-placeholder-count="3">
-              <div onClick="{{ th.pick }}" style="cursor: pointer; border-radius: 10px; overflow: hidden; border: {{ th.border }}; aspect-ratio: 1;">
-                <image-slot id="{{ th.slotId }}" src="{{ th.src }}" shape="rect" placeholder="{{ th.ph }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
+              <div onClick="{{ th.pick }}" style="position: relative; cursor: pointer; border-radius: 10px; overflow: hidden; border: {{ th.border }}; aspect-ratio: 1;">
+                <image-slot id="{{ th.slotId }}" src="{{ th.src }}" shape="rect" fit="cover" placeholder="{{ th.ph }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
+                <div style="position: absolute; inset: 0; display: {{ th.playDisplay }}; align-items: center; justify-content: center; background: {{ th.playBg }};">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#ffffff"><path d="M8 5v14l11-7z"/></svg>
+                </div>
               </div>
             </sc-for>
           </div>
 
-          <!-- foto principal con lupa 5x y lightbox -->
-          <div class="kiu-det-main" onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; border-radius: 14px; overflow: hidden; background: #f5f5f7; height: 540px; cursor: zoom-in;">
-            <image-slot id="{{ mainImgId }}" src="{{ mainSrc }}" shape="rect" placeholder="{{ detName }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
+          <!-- foto principal (contain, sin recorte) con fondo desenfocado; lupa 5x y lightbox; o video -->
+          <div class="kiu-det-main" onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; border-radius: 14px; overflow: hidden; background: #f5f5f7; height: 540px; cursor: {{ mainCursor }};">
+            <div style="position: absolute; inset: 0; background-image: {{ mainBgUrl }}; background-size: cover; background-position: center; filter: blur(30px) saturate(1.25); transform: scale(1.2);"></div>
+            <sc-if value="{{ mainIsVideo }}" hint-placeholder-val="{{ false }}">
+              <video src="{{ mainVideoSrc }}" poster="{{ mainVideoPoster }}" controls playsinline preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; background: transparent;"></video>
+            </sc-if>
+            <sc-if value="{{ mainIsImage }}" hint-placeholder-val="{{ true }}">
+              <image-slot id="{{ mainImgId }}" src="{{ mainSrc }}" shape="rect" fit="contain" placeholder="{{ detName }}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 1;"></image-slot>
+            </sc-if>
             <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
-              <div class="kiu-det-lens" style="position: absolute; pointer-events: none; width: 34%; height: 34%; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
+              <div class="kiu-det-lens" style="position: absolute; z-index: 2; pointer-events: none; width: 34%; height: 34%; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
             </sc-if>
           </div>
 
@@ -798,11 +807,17 @@ class Component extends DCLogic {
       'prod-cuenco': ['uploads/4-e6379f43.png', 'uploads/5-7def2a11.png', 'uploads/6-f6da70ea.png'],
       'prod-utensilios': ['uploads/david-4.png', 'uploads/david-5.png', 'uploads/david-6.png', 'uploads/david-1.png', 'uploads/david-2.png', 'uploads/david-3.png'],
       'prod-macetero': ['uploads/burro-1.png', 'uploads/burro-2.png', 'uploads/burro-3.png', 'uploads/burro-4.png'],
-      'prod-movil': ['uploads/puerco-4.png', 'uploads/puerco-5.png'],
+      'prod-movil': ['uploads/puerco-orange.png', 'uploads/puerco-4.png', 'uploads/puerco-5.png'],
       'prod-cesta': ['uploads/elefantes-1.png', 'uploads/elefantes-2.png', 'uploads/elefantes-3.png', 'uploads/elefantes-4.png', 'uploads/elefantes-5.png'],
       'prod-david-cabeza': ['uploads/david-cabeza-1.png', 'uploads/david-cabeza-2.png', 'uploads/david-cabeza-3.png', 'uploads/david-cabeza-4.png'],
     };
     const gal = this.state.product ? (galleryByImg[this.state.product.imgId] || ['', '', '']) : ['', '', ''];
+    // video opcional por producto (aparece como última miniatura). Para agregar otro: 'imgId': 'uploads/archivo.mp4'
+    const videoByImg = { 'prod-movil': 'uploads/puerco-orange.mp4' };
+    const galImgs = gal.filter(Boolean);
+    const vidSrc = this.state.product ? (videoByImg[this.state.product.imgId] || '') : '';
+    const videoIdx = galImgs.length; // el video va después de todas las fotos
+    const isVideoSel = !!vidSrc && this.state.detSel === videoIdx;
     const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': true, 'prod-cesta': true, 'prod-macetero': true, 'prod-movil': true, 'prod-david-cabeza': true };
     const priceNum = (p) => parseInt(String(p).replace(/[^0-9]/g, ''), 10);
     const passes = (p) => {
@@ -968,13 +983,34 @@ class Component extends DCLogic {
       detSrc: this.state.product ? (squareByImg[this.state.product.imgId] || '') : '',
       mainImgId: this.state.product ? this.state.product.imgId + '-view-' + this.state.detSel : 'none',
       mainSrc: gal[this.state.detSel] || '',
-      detThumbs: (this.state.product ? (gal.filter(Boolean).length ? gal.filter(Boolean) : ['', '', '']) : []).map((src, i) => ({
-        src: src,
-        slotId: this.state.product.imgId + '-th-' + i,
-        ph: i === 0 ? ' ' : '+',
-        border: this.state.detSel === i ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
-        pick: () => this.setState({ detSel: i }),
-      })),
+      mainIsVideo: isVideoSel,
+      mainIsImage: !isVideoSel,
+      mainVideoSrc: vidSrc,
+      mainVideoPoster: galImgs[0] || '',
+      mainBgUrl: 'url("' + (isVideoSel ? (galImgs[0] || '') : (gal[this.state.detSel] || '')) + '")',
+      mainCursor: isVideoSel ? 'default' : 'zoom-in',
+      detThumbs: (() => {
+        if (!this.state.product) return [];
+        const base = (galImgs.length ? galImgs : ['', '', '']).map((src, i) => ({
+          src: src,
+          slotId: this.state.product.imgId + '-th-' + i,
+          ph: i === 0 ? ' ' : '+',
+          border: (!isVideoSel && this.state.detSel === i) ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
+          playDisplay: 'none',
+          playBg: 'transparent',
+          pick: () => this.setState({ detSel: i, zoomOn: false }),
+        }));
+        if (vidSrc) base.push({
+          src: galImgs[0] || '',
+          slotId: this.state.product.imgId + '-th-vid',
+          ph: ' ',
+          border: isVideoSel ? '2px solid #0071e3' : '1px solid rgba(0,0,0,0.12)',
+          playDisplay: 'flex',
+          playBg: 'rgba(0,0,0,0.28)',
+          pick: () => this.setState({ detSel: videoIdx, zoomOn: false, lightbox: false }),
+        });
+        return base;
+      })(),
 
       // lupa 5x + lightbox
       zoomOn: this.state.zoomOn && !!(gal[this.state.detSel]),
@@ -983,6 +1019,7 @@ class Component extends DCLogic {
       lensLeft: Math.max(0, Math.min(66, this.state.zoomX - 17)) + '%',
       lensTop: Math.max(0, Math.min(66, this.state.zoomY - 17)) + '%',
       zoomMove: (e) => {
+        if (!gal[this.state.detSel]) return; // sin lupa sobre el video o selección vacía
         const r = e.currentTarget.getBoundingClientRect();
         this.setState({ zoomOn: true, zoomX: Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)), zoomY: Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100)) });
       },
