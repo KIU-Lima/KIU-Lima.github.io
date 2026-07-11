@@ -433,8 +433,8 @@ class Component extends DCLogic {
     try {
       const m = (window.location.hash || '').match(/^#\/?producto\/([^?&\/]+)/i);
       if (m) {
-        const slugMap = { budas: 'hero-img', 'cara-del-silencio': 'prod-cuenco', david: 'prod-utensilios', elefantes: 'prod-cesta', 'servilletero-burro': 'prod-macetero', puerco: 'prod-movil', 'cabeza-david': 'prod-david-cabeza' };
-        const ids = ['hero-img', 'prod-cuenco', 'prod-utensilios', 'prod-cesta', 'prod-macetero', 'prod-movil', 'prod-david-cabeza'];
+        const slugMap = { budas: 'hero-img', 'cara-del-silencio': 'prod-cuenco', david: 'prod-utensilios', elefantes: 'prod-cesta', 'servilletero-burro': 'prod-macetero', puerco: 'prod-movil', 'cabeza-david': 'prod-david-cabeza', 'frutales-vidrio': 'prod-frutales' };
+        const ids = ['hero-img', 'prod-cuenco', 'prod-utensilios', 'prod-cesta', 'prod-macetero', 'prod-movil', 'prod-david-cabeza', 'prod-frutales'];
         const key = decodeURIComponent(m[1]).toLowerCase();
         const id = slugMap[key] || (ids.indexOf(key) >= 0 ? key : null);
         if (id) { s.page = 'detail'; s.product = { imgId: id }; }
@@ -548,7 +548,7 @@ class Component extends DCLogic {
 
   // --- Enlaces directos por producto (deep-linking: #producto/<slug>) ---
   productSlugMap() {
-    return { 'hero-img': 'budas', 'prod-cuenco': 'cara-del-silencio', 'prod-utensilios': 'david', 'prod-cesta': 'elefantes', 'prod-macetero': 'servilletero-burro', 'prod-movil': 'puerco', 'prod-david-cabeza': 'cabeza-david' };
+    return { 'hero-img': 'budas', 'prod-cuenco': 'cara-del-silencio', 'prod-utensilios': 'david', 'prod-cesta': 'elefantes', 'prod-macetero': 'servilletero-burro', 'prod-movil': 'puerco', 'prod-david-cabeza': 'cabeza-david', 'prod-frutales': 'frutales-vidrio' };
   }
   slugForId(id) { return this.productSlugMap()[id] || id; }
   idFromSlug(slug) {
@@ -762,6 +762,7 @@ class Component extends DCLogic {
         { name: 'Servilletero Con Diseño De Burro', price: '$299 MXN' },
         { name: 'Mini Puerco Alcancía', price: '$149 MXN' },
         { name: 'Cabeza de David', price: '$499 MXN' },
+        { name: 'Árbol de Frutales de Vidrio', price: '$499 MXN' },
       ],
     } : {
       brandSub: 'handcrafts',
@@ -791,17 +792,18 @@ class Component extends DCLogic {
         { name: 'Donkey Napkin Holder Set', price: '$299 MXN' },
         { name: 'Mini Piggy Bank', price: '$149 MXN' },
         { name: 'David Head', price: '$499 MXN' },
+        { name: 'Glass Fruit Tree', price: '$499 MXN' },
       ],
     };
 
-    const imgIds = ['hero-img', 'prod-cuenco', 'prod-utensilios', 'prod-cesta', 'prod-macetero', 'prod-movil', 'prod-david-cabeza'];
+    const imgIds = ['hero-img', 'prod-cuenco', 'prod-utensilios', 'prod-cesta', 'prod-macetero', 'prod-movil', 'prod-david-cabeza', 'prod-frutales'];
     const placeholders = es
-      ? ['Foto: budas bebés', 'Foto: cara del silencio', 'Foto: utensilios', 'Foto: cesta tejida', 'Foto: macetero', 'Foto: móvil de madera', 'Foto: cabeza de david']
-      : ['Photo: baby buddhas', 'Photo: face of silence', 'Photo: utensils', 'Photo: woven basket', 'Photo: planter', 'Photo: wooden mobile', 'Photo: david head'];
+      ? ['Foto: budas bebés', 'Foto: cara del silencio', 'Foto: utensilios', 'Foto: cesta tejida', 'Foto: macetero', 'Foto: móvil de madera', 'Foto: cabeza de david', 'Foto: frutales de vidrio']
+      : ['Photo: baby buddhas', 'Photo: face of silence', 'Photo: utensils', 'Photo: woven basket', 'Photo: planter', 'Photo: wooden mobile', 'Photo: david head', 'Photo: glass fruit tree'];
 
     const descs = es
-      ? { 'hero-img': 'Juego de tres Budas de decoración minimalista — No Oigo, No Veo, No Hablo. Transforma cualquier espacio con este elegante juego.', 'prod-cuenco': 'Escultura única que evoca misterio y contemplación. Tallada con precisión y detalle, capturará la atención de cualquier amante del arte y la decoración.', 'prod-utensilios': 'Añade serenidad y estilo a tu hogar u oficina con esta escultura de un hombre pensante, meticulosamente elaborada en yeso cerámico de alta calidad. Su postura relajada y expresión serena, junto a la textura cuidadosamente esculpida de la ropa y la piel, le dan un aspecto natural y contemplativo.', 'prod-cesta': 'Tres elefantes apilados que representan la sabiduría de "no oigo, no hablo, no veo". Pieza artesanal esculpida con gran detalle, con acabado dorado y pátina turquesa sobre base circular. Un símbolo de armonía y buena fortuna para cualquier espacio.', 'prod-macetero': 'Encantador servilletero artesanal con forma de burro —símbolo de trabajo y perseverancia— esculpido con gran detalle. El conjunto incluye dos saleros a juego que complementan el diseño, creando una armonía visual. Cada pieza es única, hecha a mano con materiales duraderos.', 'prod-movil': 'Alcancía en forma de mini puerquito, ideal para que los niños aprendan a ahorrar de forma divertida. Con su acabado brillante y carita simpática, alegra cualquier escritorio o recámara mientras guarda sus primeras monedas.', 'prod-david-cabeza': 'Busto de la cabeza del David de Miguel Ángel, reinterpretado a mano con acabado bronce y pátina verdosa que le dan aire de escultura antigua. Los rizos, la mirada serena y los rasgos clásicos están esculpidos con gran detalle, y descansa sobre una base negra pulida. Una pieza artística que aporta elegancia y carácter a salas, estudios o libreros.' }
-      : { 'hero-img': 'Set of three minimalist decorative Buddhas — Hear No, See No, Speak No Evil. Transform any space with this elegant set.', 'prod-cuenco': 'A one-of-a-kind sculpture that evokes mystery and contemplation. Carved with precision and detail, it will captivate any lover of art and décor.', 'prod-utensilios': 'Bring serenity and style to your home or office with this sculpture of a seated, pensive man, meticulously crafted in high-quality ceramic plaster. Its relaxed posture and serene expression, along with carefully sculpted textures, give it a natural, contemplative look.', 'prod-cesta': 'Three stacked elephants embodying the wisdom of "hear no, speak no, see no evil." A handcrafted piece sculpted in fine detail with a golden finish and turquoise patina on a round base. A symbol of harmony and good fortune for any space.', 'prod-macetero': 'Charming handcrafted napkin holder shaped like a donkey —a symbol of hard work and perseverance— sculpted in great detail. The set includes two matching salt shakers that complement the design. Each piece is unique, handmade with durable materials.', 'prod-movil': 'Mini piggy-bank coin holder, perfect for kids to learn to save in a fun way. With its glossy finish and friendly face, it brightens any desk or bedroom while keeping their first coins safe.', 'prod-david-cabeza': 'Bust of Michelangelo\'s David, reinterpreted by hand with a bronze finish and green patina that give it the air of an antique sculpture. The curls, serene gaze and classical features are sculpted in fine detail, resting on a polished black base. An artistic piece that brings elegance and character to living rooms, studies or bookshelves.' };
+      ? { 'hero-img': 'Juego de tres Budas de decoración minimalista — No Oigo, No Veo, No Hablo. Transforma cualquier espacio con este elegante juego.', 'prod-cuenco': 'Escultura única que evoca misterio y contemplación. Tallada con precisión y detalle, capturará la atención de cualquier amante del arte y la decoración.', 'prod-utensilios': 'Añade serenidad y estilo a tu hogar u oficina con esta escultura de un hombre pensante, meticulosamente elaborada en yeso cerámico de alta calidad. Su postura relajada y expresión serena, junto a la textura cuidadosamente esculpida de la ropa y la piel, le dan un aspecto natural y contemplativo.', 'prod-cesta': 'Tres elefantes apilados que representan la sabiduría de "no oigo, no hablo, no veo". Pieza artesanal esculpida con gran detalle, con acabado dorado y pátina turquesa sobre base circular. Un símbolo de armonía y buena fortuna para cualquier espacio.', 'prod-macetero': 'Encantador servilletero artesanal con forma de burro —símbolo de trabajo y perseverancia— esculpido con gran detalle. El conjunto incluye dos saleros a juego que complementan el diseño, creando una armonía visual. Cada pieza es única, hecha a mano con materiales duraderos.', 'prod-movil': 'Alcancía en forma de mini puerquito, ideal para que los niños aprendan a ahorrar de forma divertida. Con su acabado brillante y carita simpática, alegra cualquier escritorio o recámara mientras guarda sus primeras monedas.', 'prod-david-cabeza': 'Busto de la cabeza del David de Miguel Ángel, reinterpretado a mano con acabado bronce y pátina verdosa que le dan aire de escultura antigua. Los rizos, la mirada serena y los rasgos clásicos están esculpidos con gran detalle, y descansa sobre una base negra pulida. Una pieza artística que aporta elegancia y carácter a salas, estudios o libreros.', 'prod-frutales': 'Árbol decorativo con tres manzanas de vidrio dorado y un racimo de uvas que cuelgan de una elegante estructura metálica con hojas doradas. El vidrio captura la luz con reflejos cálidos y brillantes, ideal como centro de mesa o acento luminoso en repisas, vitrinas y aparadores.' }
+      : { 'hero-img': 'Set of three minimalist decorative Buddhas — Hear No, See No, Speak No Evil. Transform any space with this elegant set.', 'prod-cuenco': 'A one-of-a-kind sculpture that evokes mystery and contemplation. Carved with precision and detail, it will captivate any lover of art and décor.', 'prod-utensilios': 'Bring serenity and style to your home or office with this sculpture of a seated, pensive man, meticulously crafted in high-quality ceramic plaster. Its relaxed posture and serene expression, along with carefully sculpted textures, give it a natural, contemplative look.', 'prod-cesta': 'Three stacked elephants embodying the wisdom of "hear no, speak no, see no evil." A handcrafted piece sculpted in fine detail with a golden finish and turquoise patina on a round base. A symbol of harmony and good fortune for any space.', 'prod-macetero': 'Charming handcrafted napkin holder shaped like a donkey —a symbol of hard work and perseverance— sculpted in great detail. The set includes two matching salt shakers that complement the design. Each piece is unique, handmade with durable materials.', 'prod-movil': 'Mini piggy-bank coin holder, perfect for kids to learn to save in a fun way. With its glossy finish and friendly face, it brightens any desk or bedroom while keeping their first coins safe.', 'prod-david-cabeza': 'Bust of Michelangelo\'s David, reinterpreted by hand with a bronze finish and green patina that give it the air of an antique sculpture. The curls, serene gaze and classical features are sculpted in fine detail, resting on a polished black base. An artistic piece that brings elegance and character to living rooms, studies or bookshelves.', 'prod-frutales': 'Decorative tree with three golden glass apples and a cluster of glass grapes hanging from an elegant metal stand with gilded leaves. The glass catches the light with warm, sparkling reflections — perfect as a table centerpiece or a bright accent on shelves, cabinets and sideboards.' };
 
     const catalogMap = {
       'hero-img': { name: t.featName, price: t.featPrice },
@@ -810,8 +812,8 @@ class Component extends DCLogic {
     t.products.forEach((p, i) => { catalogMap[imgIds[i]] = { name: p.name, price: p.price }; });
 
     // fotos reales: portada (ancha) y cuadrada (detalle)
-    const coverByImg = { 'hero-img': 'uploads/protada_rectangular.png', 'prod-cuenco': 'uploads/silencio-portada.png', 'prod-utensilios': 'uploads/david-portada.png', 'prod-macetero': 'uploads/burro-portada.png', 'prod-movil': 'uploads/puerco-portada.png', 'prod-cesta': 'uploads/elefantes-portada.png', 'prod-david-cabeza': 'uploads/david-cabeza-portada.png' };
-    const squareByImg = { 'hero-img': 'uploads/1.png', 'prod-cuenco': 'uploads/4-e6379f43.png', 'prod-utensilios': 'uploads/david-4.png', 'prod-macetero': 'uploads/burro-1.png', 'prod-movil': 'uploads/puerco-4.png', 'prod-cesta': 'uploads/elefantes-1.png', 'prod-david-cabeza': 'uploads/david-cabeza-1.png' };
+    const coverByImg = { 'hero-img': 'uploads/protada_rectangular.png', 'prod-cuenco': 'uploads/silencio-portada.png', 'prod-utensilios': 'uploads/david-portada.png', 'prod-macetero': 'uploads/burro-portada.png', 'prod-movil': 'uploads/puerco-portada.png', 'prod-cesta': 'uploads/elefantes-portada.png', 'prod-david-cabeza': 'uploads/david-cabeza-portada.png', 'prod-frutales': 'uploads/frutales-portada.png' };
+    const squareByImg = { 'hero-img': 'uploads/1.png', 'prod-cuenco': 'uploads/4-e6379f43.png', 'prod-utensilios': 'uploads/david-4.png', 'prod-macetero': 'uploads/burro-1.png', 'prod-movil': 'uploads/puerco-4.png', 'prod-cesta': 'uploads/elefantes-1.png', 'prod-david-cabeza': 'uploads/david-cabeza-1.png', 'prod-frutales': 'uploads/frutales-1.png' };
     // galería por producto: [foto principal, cuadrada 2, cuadrada 3, ...]
     const galleryByImg = {
       'hero-img': ['uploads/1.png', 'uploads/2.png', 'uploads/3.png', 'uploads/4.png', 'uploads/5.png', 'uploads/6.png'],
@@ -821,6 +823,7 @@ class Component extends DCLogic {
       'prod-movil': ['uploads/puerco-orange.png', 'uploads/puerco-4.png', 'uploads/puerco-5.png'],
       'prod-cesta': ['uploads/elefantes-1.png', 'uploads/elefantes-2.png', 'uploads/elefantes-3.png', 'uploads/elefantes-4.png', 'uploads/elefantes-5.png'],
       'prod-david-cabeza': ['uploads/david-cabeza-1.png', 'uploads/david-cabeza-2.png', 'uploads/david-cabeza-3.png', 'uploads/david-cabeza-4.png'],
+      'prod-frutales': ['uploads/frutales-1.png', 'uploads/frutales-portada.png'],
     };
     const gal = this.state.product ? (galleryByImg[this.state.product.imgId] || ['', '', '']) : ['', '', ''];
     // video opcional por producto (aparece como última miniatura). Para agregar otro: 'imgId': 'uploads/archivo.mp4'
@@ -830,7 +833,7 @@ class Component extends DCLogic {
     const videoIdx = galImgs.length; // el video va después de todas las fotos
     const zf = this.state.zoomFrame; // marco de la foto al momento del último zoomMove (px)
     const isVideoSel = !!vidSrc && this.state.detSel === videoIdx;
-    const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': true, 'prod-cesta': true, 'prod-macetero': true, 'prod-movil': true, 'prod-david-cabeza': true };
+    const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': true, 'prod-cesta': true, 'prod-macetero': true, 'prod-movil': true, 'prod-david-cabeza': true, 'prod-frutales': true };
     const priceNum = (p) => parseInt(String(p).replace(/[^0-9]/g, ''), 10);
     const passes = (p) => {
       const st = this.state;
@@ -849,9 +852,9 @@ class Component extends DCLogic {
       if (anyMat && !msel[materialByImg[p.imgId]]) return false;
       return true;
     };
-    const stockByImg = { 'hero-img': 8, 'prod-cuenco': 5, 'prod-utensilios': 12, 'prod-cesta': 3, 'prod-macetero': 6, 'prod-movil': 4, 'prod-david-cabeza': 5 };
-    const catByImg = { 'hero-img': 'wood', 'prod-cuenco': 'wood', 'prod-utensilios': 'wood', 'prod-movil': 'wood', 'prod-cesta': 'fiber', 'prod-macetero': 'fiber', 'prod-david-cabeza': 'wood' };
-    const materialByImg = { 'hero-img': 'yeso', 'prod-cuenco': 'yeso', 'prod-utensilios': 'yeso', 'prod-movil': 'yeso', 'prod-cesta': 'yeso', 'prod-macetero': 'ceramica', 'prod-david-cabeza': 'yeso' };
+    const stockByImg = { 'hero-img': 8, 'prod-cuenco': 5, 'prod-utensilios': 12, 'prod-cesta': 3, 'prod-macetero': 6, 'prod-movil': 4, 'prod-david-cabeza': 5, 'prod-frutales': 5 };
+    const catByImg = { 'hero-img': 'wood', 'prod-cuenco': 'wood', 'prod-utensilios': 'wood', 'prod-movil': 'wood', 'prod-cesta': 'fiber', 'prod-macetero': 'fiber', 'prod-david-cabeza': 'wood', 'prod-frutales': 'wood' };
+    const materialByImg = { 'hero-img': 'yeso', 'prod-cuenco': 'yeso', 'prod-utensilios': 'yeso', 'prod-movil': 'yeso', 'prod-cesta': 'yeso', 'prod-macetero': 'ceramica', 'prod-david-cabeza': 'yeso', 'prod-frutales': 'vidrio' };
 
     const sel = this.state.sel;
     const selOpenFull = sel && sel.phase === 'open';
@@ -911,6 +914,7 @@ class Component extends DCLogic {
       matOpts: [
         { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
         { id: 'yeso', label: es ? 'Yeso cerámico' : 'Ceramic plaster' },
+        { id: 'vidrio', label: es ? 'Vidrio' : 'Glass' },
       ].map((o) => ({
         ...o,
         checked: !!this.state.matSel[o.id],
@@ -952,6 +956,7 @@ class Component extends DCLogic {
       menuMats: [
         { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
         { id: 'yeso', label: es ? 'Yeso cerámico' : 'Ceramic plaster' },
+        { id: 'vidrio', label: es ? 'Vidrio' : 'Glass' },
       ].map((c) => ({
         ...c,
         pick: () => { this.setState({ matSel: { [c.id]: true }, cat: 'all', query: '', openMenu: null }); this.fadeApply(); },
@@ -1133,8 +1138,8 @@ class Component extends DCLogic {
         : 'Each piece is made individually, so measurements, grain and tones may vary slightly — that is what makes it unique. Ships in protective packaging with a care guide.',
       charRows: this.state.product ? [
         { k: es ? 'Material' : 'Material', v: (es
-          ? { 'hero-img': 'Yeso cerámico', 'prod-cuenco': 'Yeso cerámico', 'prod-utensilios': 'Yeso cerámico', 'prod-cesta': 'Yeso cerámico', 'prod-macetero': 'Cerámica', 'prod-movil': 'Yeso cerámico', 'prod-david-cabeza': 'Yeso cerámico' }
-          : { 'hero-img': 'Ceramic plaster', 'prod-cuenco': 'Ceramic plaster', 'prod-utensilios': 'Ceramic plaster', 'prod-cesta': 'Ceramic plaster', 'prod-macetero': 'Ceramic', 'prod-movil': 'Ceramic plaster', 'prod-david-cabeza': 'Ceramic plaster' })[this.state.product.imgId] },
+          ? { 'hero-img': 'Yeso cerámico', 'prod-cuenco': 'Yeso cerámico', 'prod-utensilios': 'Yeso cerámico', 'prod-cesta': 'Yeso cerámico', 'prod-macetero': 'Cerámica', 'prod-movil': 'Yeso cerámico', 'prod-david-cabeza': 'Yeso cerámico', 'prod-frutales': 'Vidrio y metal' }
+          : { 'hero-img': 'Ceramic plaster', 'prod-cuenco': 'Ceramic plaster', 'prod-utensilios': 'Ceramic plaster', 'prod-cesta': 'Ceramic plaster', 'prod-macetero': 'Ceramic', 'prod-movil': 'Ceramic plaster', 'prod-david-cabeza': 'Ceramic plaster', 'prod-frutales': 'Glass and metal' })[this.state.product.imgId] },
         ...(this.state.product.imgId === 'prod-utensilios' ? [
           { k: es ? 'Dimensiones' : 'Dimensions', v: '30 × 17 × 17 cm' },
           { k: es ? 'Peso' : 'Weight', v: '1.8 kg' },
@@ -1146,7 +1151,11 @@ class Component extends DCLogic {
         ] : []),
         { k: es ? 'Técnica' : 'Technique', v: es ? 'Elaborado a mano' : 'Handmade' },
         { k: es ? 'Origen' : 'Origin', v: 'México' },
-        ...(['prod-utensilios', 'prod-macetero', 'prod-movil'].includes(this.state.product.imgId) ? [] : [
+        ...(this.state.product.imgId === 'prod-frutales' ? [
+          { k: es ? 'Acabado' : 'Finish', v: es ? 'Vidrio dorado espejo' : 'Mirrored gold glass' },
+          { k: es ? 'Incluye' : 'Includes', v: es ? '3 manzanas y racimo de uvas' : '3 apples and grape cluster' },
+        ] : []),
+        ...(['prod-utensilios', 'prod-macetero', 'prod-movil', 'prod-frutales'].includes(this.state.product.imgId) ? [] : [
           { k: es ? 'Acabado' : 'Finish', v: this.state.product.imgId === 'prod-david-cabeza' ? (es ? 'Pátina bronce' : 'Bronze patina') : (['hero-img', 'prod-cesta'].includes(this.state.product.imgId) ? (es ? 'Óxido' : 'Oxide') : (es ? 'Aceites y ceras naturales' : 'Natural oils and waxes')) },
         ]),
         ...(this.state.product.imgId === 'prod-movil' ? [
