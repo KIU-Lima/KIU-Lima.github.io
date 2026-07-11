@@ -10,6 +10,7 @@
 <helmet data-dc-atomics>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <script src="./image-slot.js"></script>
+  <script src="./ambient-photo.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
   <style>
     html { scroll-behavior: smooth; }
@@ -25,6 +26,8 @@
     .kiu-filt:hover { color: #1d1d1f !important; }
     .kiu-prod-price { transition: color 0.25s ease; }
     .kiu-prod-grid article:hover .kiu-prod-price { color: #0071e3 !important; }
+    /* lightbox: resplandor más intenso sobre fondo oscuro (las custom props heredan al shadow DOM de <kiu-ambient>) */
+    .kiu-lb-photo { --ka-radius: 22px; --ka-glow-blur: 60px; --ka-glow-sat: 2; --ka-glow-opacity: 0.95; --ka-glow-scale: 1.06; --ka-shadow: 0 30px 80px rgba(0,0,0,0.45); --ka-ring: rgba(255,255,255,0.14); }
 
     /* ===== Responsive (móvil / tablet) ===== */
     @media (max-width: 980px) {
@@ -283,7 +286,8 @@
 
         <div class="kiu-det-grid" style="position: relative; display: grid; grid-template-columns: 76px 1fr 380px; gap: 24px; align-items: start; margin-top: 16px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 18px; padding: 28px;">
           <!-- miniaturas -->
-          <div class="kiu-det-thumbs" style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- position+z-index: las miniaturas y la compra van POR ENCIMA del resplandor que se derrama del visor -->
+          <div class="kiu-det-thumbs" style="display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 2;">
             <sc-for list="{{ detThumbs }}" as="th" hint-placeholder-count="3">
               <div onClick="{{ th.pick }}" style="position: relative; cursor: pointer; border-radius: 10px; overflow: hidden; border: {{ th.border }}; aspect-ratio: 1;">
                 <image-slot id="{{ th.slotId }}" src="{{ th.src }}" shape="rect" fit="cover" placeholder="{{ th.ph }}" style="width: 100%; height: 100%; display: block; pointer-events: none;"></image-slot>
@@ -294,17 +298,16 @@
             </sc-for>
           </div>
 
-          <!-- foto principal (contain, sin recorte) con fondo desenfocado; lupa 5x y lightbox; o video -->
-          <div class="kiu-det-main" onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; border-radius: 14px; overflow: hidden; background: #f5f5f7; height: 540px; cursor: {{ mainCursor }};">
-            <div style="position: absolute; inset: 0; background-image: {{ mainBgUrl }}; background-size: cover; background-position: center; filter: blur(30px) saturate(1.25); transform: scale(1.2);"></div>
+          <!-- foto principal: marco que se adapta a cada imagen (sin recorte) + resplandor ambiental tipo YouTube; lupa 5x y lightbox; o video -->
+          <div class="kiu-det-main" onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; height: 540px; cursor: {{ mainCursor }};">
             <sc-if value="{{ mainIsVideo }}" hint-placeholder-val="{{ false }}">
-              <video src="{{ mainVideoSrc }}" poster="{{ mainVideoPoster }}" controls playsinline preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; z-index: 1; background: transparent;"></video>
+              <kiu-ambient video-src="{{ mainVideoSrc }}" poster="{{ mainVideoPoster }}" style="position: absolute; inset: 0; z-index: 1;"></kiu-ambient>
             </sc-if>
             <sc-if value="{{ mainIsImage }}" hint-placeholder-val="{{ true }}">
-              <image-slot id="{{ mainImgId }}" src="{{ mainSrc }}" shape="rect" fit="contain" placeholder="{{ detName }}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; z-index: 1;"></image-slot>
+              <kiu-ambient src="{{ mainSrc }}" alt="{{ detName }}" style="position: absolute; inset: 0; z-index: 1; pointer-events: none;"></kiu-ambient>
             </sc-if>
             <sc-if value="{{ zoomOn }}" hint-placeholder-val="{{ false }}">
-              <div class="kiu-det-lens" style="position: absolute; z-index: 2; pointer-events: none; width: 34%; height: 34%; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
+              <div class="kiu-det-lens" style="position: absolute; z-index: 2; pointer-events: none; width: {{ lensW }}; height: {{ lensH }}; left: {{ lensLeft }}; top: {{ lensTop }}; background: rgba(0,113,227,0.12); border: 1px solid rgba(0,113,227,0.5);"></div>
             </sc-if>
           </div>
 
@@ -314,7 +317,7 @@
           </sc-if>
 
           <!-- columna de compra -->
-          <div class="kiu-det-buy" style="display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; padding: 24px;">
+          <div class="kiu-det-buy" style="display: flex; flex-direction: column; gap: 14px; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; padding: 24px; background: #ffffff; position: relative; z-index: 2;">
             <span style="font-size: 13px; color: #86868b; font-weight: 400;">{{ detCondition }}</span>
             <h1 style="font-size: 24px; font-weight: 600; letter-spacing: -0.01em; color: #1d1d1f; margin: 0; line-height: 1.25;">{{ detName }}</h1>
             <span class="kiu-det-price" style="font-size: 34px; font-weight: 500; color: #1d1d1f;">{{ detPrice }}</span>
@@ -356,7 +359,7 @@
         <!-- lightbox -->
         <sc-if value="{{ lightboxOn }}" hint-placeholder-val="{{ false }}">
           <div onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 95; background: rgba(0,0,0,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); display: flex; align-items: center; justify-content: center; cursor: zoom-out; animation: kiuLbBg 0.5s ease both;">
-            <div style="width: 88vmin; height: 88vmin; max-width: 90vw; max-height: 90vh; border-radius: 24px; overflow: hidden; background-image: {{ zoomBg }}; background-size: cover; background-position: center; background-repeat: no-repeat; box-shadow: 0 30px 80px rgba(0,0,0,0.4); animation: kiuLbImg 0.55s cubic-bezier(0.33, 1, 0.5, 1) 0.08s both;"></div>
+            <kiu-ambient class="kiu-lb-photo" src="{{ mainSrc }}" alt="{{ detName }}" style="position: relative; width: min(1400px, 92vw); height: 86vh; animation: kiuLbImg 0.55s cubic-bezier(0.33, 1, 0.5, 1) 0.08s both;"></kiu-ambient>
           </div>
         </sc-if>
 
@@ -426,7 +429,7 @@
 }">
 class Component extends DCLogic {
   state = (() => {
-    const s = { lang: null, openMenu: null, sel: null, page: 'home', product: null, white: false, cat: 'all', query: '', appliedCat: 'all', appliedQuery: '', detSel: 0, zoomOn: false, zoomX: 50, zoomY: 50, lightbox: false, priceSel: {}, freeSel: false, matSel: {}, appliedPriceSel: {}, appliedFreeSel: false, appliedMatSel: {}, listFade: false, featIdx: 0, featFade: false, cartOpen: false, cart: [], shopVariants: {} };
+    const s = { lang: null, openMenu: null, sel: null, page: 'home', product: null, white: false, cat: 'all', query: '', appliedCat: 'all', appliedQuery: '', detSel: 0, zoomOn: false, zoomX: 50, zoomY: 50, frameHover: false, zoomFrame: null, lightbox: false, priceSel: {}, freeSel: false, matSel: {}, appliedPriceSel: {}, appliedFreeSel: false, appliedMatSel: {}, listFade: false, featIdx: 0, featFade: false, cartOpen: false, cart: [], shopVariants: {} };
     try {
       const m = (window.location.hash || '').match(/^#\/?producto\/([^?&\/]+)/i);
       if (m) {
@@ -533,6 +536,14 @@ class Component extends DCLogic {
       this.clearHash();
       this.setState({ page: 'home', product: null, white: false });
     }, 440)];
+  }
+
+  // Marco real de la foto dentro del visor (px relativos a la caja del visor);
+  // null si el componente aún no midió la imagen — se usa la caja completa.
+  frameOf(box) {
+    const ka = box.querySelector && box.querySelector('kiu-ambient[src]');
+    const fr = ka && ka.frameRect;
+    return (fr && fr.width > 0 && fr.height > 0) ? fr : null;
   }
 
   // --- Enlaces directos por producto (deep-linking: #producto/<slug>) ---
@@ -817,6 +828,7 @@ class Component extends DCLogic {
     const galImgs = gal.filter(Boolean);
     const vidSrc = this.state.product ? (videoByImg[this.state.product.imgId] || '') : '';
     const videoIdx = galImgs.length; // el video va después de todas las fotos
+    const zf = this.state.zoomFrame; // marco de la foto al momento del último zoomMove (px)
     const isVideoSel = !!vidSrc && this.state.detSel === videoIdx;
     const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': true, 'prod-cesta': true, 'prod-macetero': true, 'prod-movil': true, 'prod-david-cabeza': true };
     const priceNum = (p) => parseInt(String(p).replace(/[^0-9]/g, ''), 10);
@@ -981,14 +993,12 @@ class Component extends DCLogic {
       detNote: es ? 'Pieza única · hecha a mano' : 'One of a kind · handmade',
       detBack: es ? 'Volver al catálogo' : 'Back to catalog',
       detSrc: this.state.product ? (squareByImg[this.state.product.imgId] || '') : '',
-      mainImgId: this.state.product ? this.state.product.imgId + '-view-' + this.state.detSel : 'none',
       mainSrc: gal[this.state.detSel] || '',
       mainIsVideo: isVideoSel,
       mainIsImage: !isVideoSel,
       mainVideoSrc: vidSrc,
       mainVideoPoster: galImgs[0] || '',
-      mainBgUrl: 'url("' + (isVideoSel ? (galImgs[0] || '') : (gal[this.state.detSel] || '')) + '")',
-      mainCursor: isVideoSel ? 'default' : 'zoom-in',
+      mainCursor: isVideoSel ? 'default' : (this.state.frameHover ? 'zoom-in' : 'default'),
       detThumbs: (() => {
         if (!this.state.product) return [];
         const base = (galImgs.length ? galImgs : ['', '', '']).map((src, i) => ({
@@ -1012,20 +1022,38 @@ class Component extends DCLogic {
         return base;
       })(),
 
-      // lupa 5x + lightbox
+      // lupa 5x + lightbox, acotadas al marco real de la foto (frameRect de <kiu-ambient>)
       zoomOn: this.state.zoomOn && !!(gal[this.state.detSel]),
       zoomBg: 'url("' + (gal[this.state.detSel] || '') + '")',
       zoomPos: this.state.zoomX + '% ' + this.state.zoomY + '%',
-      lensLeft: Math.max(0, Math.min(66, this.state.zoomX - 17)) + '%',
-      lensTop: Math.max(0, Math.min(66, this.state.zoomY - 17)) + '%',
+      lensLeft: (zf ? zf.l + Math.max(0, Math.min(zf.w * 0.66, (this.state.zoomX / 100) * zf.w - zf.w * 0.17)) : 0) + 'px',
+      lensTop: (zf ? zf.t + Math.max(0, Math.min(zf.h * 0.66, (this.state.zoomY / 100) * zf.h - zf.h * 0.17)) : 0) + 'px',
+      lensW: (zf ? zf.w * 0.34 : 0) + 'px',
+      lensH: (zf ? zf.h * 0.34 : 0) + 'px',
       zoomMove: (e) => {
         if (!gal[this.state.detSel]) return; // sin lupa sobre el video o selección vacía
         const r = e.currentTarget.getBoundingClientRect();
-        this.setState({ zoomOn: true, zoomX: Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)), zoomY: Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100)) });
+        const fr = this.frameOf(e.currentTarget) || { left: 0, top: 0, width: r.width, height: r.height };
+        const x = e.clientX - r.left - fr.left;
+        const y = e.clientY - r.top - fr.top;
+        if (x < 0 || y < 0 || x > fr.width || y > fr.height) {
+          if (this.state.zoomOn || this.state.frameHover) this.setState({ zoomOn: false, frameHover: false });
+          return;
+        }
+        this.setState({ zoomOn: true, frameHover: true, zoomX: Math.max(0, Math.min(100, (x / fr.width) * 100)), zoomY: Math.max(0, Math.min(100, (y / fr.height) * 100)), zoomFrame: { l: fr.left, t: fr.top, w: fr.width, h: fr.height } });
       },
-      zoomOff: () => this.setState({ zoomOn: false }),
+      zoomOff: () => this.setState({ zoomOn: false, frameHover: false }),
       lightboxOn: this.state.lightbox && !!(gal[this.state.detSel]),
-      openLightbox: () => { if (gal[this.state.detSel]) this.setState({ lightbox: true, zoomOn: false }); },
+      openLightbox: (e) => {
+        if (!gal[this.state.detSel]) return;
+        const fr = this.frameOf(e.currentTarget);
+        if (fr) {
+          const r = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - r.left, y = e.clientY - r.top;
+          if (x < fr.left || y < fr.top || x > fr.left + fr.width || y > fr.top + fr.height) return; // clic fuera de la foto
+        }
+        this.setState({ lightbox: true, zoomOn: false });
+      },
       closeLightbox: () => this.setState({ lightbox: false }),
       pickImg0: () => this.setState({ detSel: 0 }),
       pickImg1: () => this.setState({ detSel: 1 }),
