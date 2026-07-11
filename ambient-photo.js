@@ -6,8 +6,9 @@
  * inset:0 dentro de un escenario). Mide las dimensiones reales de la imagen o
  * del video y coloca un "wrap" exactamente sobre el rectángulo contenido
  * (sin recorte, centrado). Sobre ese rectángulo:
- *   - .glow  copia de la imagen desenfocada y saturada, escalada un poco, que
- *            se derrama fuera del marco con los colores dominantes de la foto.
+ *   - .glow  SOLO en modo video: el póster desenfocado y saturado, escalado
+ *            un poco, que se derrama fuera del marco con los colores
+ *            dominantes. Las fotos no llevan resplandor.
  *   - .media la foto (<img>) o el video (<video controls>), con esquinas
  *            redondeadas que abrazan el encuadre real.
  *   - .ring  contorno fino de 1px pintado por dentro del marco.
@@ -137,7 +138,7 @@
         } else if (this._img.getAttribute('src') !== src) {
           this._img.src = src;
         }
-        this._setGlow(src);
+        this._setGlow(''); // sin resplandor en fotos: solo lo llevan los videos
       }
       this._layout();
     }

@@ -26,8 +26,8 @@
     .kiu-filt:hover { color: #1d1d1f !important; }
     .kiu-prod-price { transition: color 0.25s ease; }
     .kiu-prod-grid article:hover .kiu-prod-price { color: #0071e3 !important; }
-    /* lightbox: resplandor más intenso sobre fondo oscuro (las custom props heredan al shadow DOM de <kiu-ambient>) */
-    .kiu-lb-photo { --ka-radius: 22px; --ka-glow-blur: 60px; --ka-glow-sat: 2; --ka-glow-opacity: 0.95; --ka-glow-scale: 1.06; --ka-shadow: 0 30px 80px rgba(0,0,0,0.45); --ka-ring: rgba(255,255,255,0.14); }
+    /* lightbox: marco y sombra sobre fondo oscuro (las custom props heredan al shadow DOM de <kiu-ambient>) */
+    .kiu-lb-photo { --ka-radius: 22px; --ka-shadow: 0 30px 80px rgba(0,0,0,0.45); --ka-ring: rgba(255,255,255,0.14); }
 
     /* ===== Responsive (móvil / tablet) ===== */
     @media (max-width: 980px) {
@@ -298,7 +298,7 @@
             </sc-for>
           </div>
 
-          <!-- foto principal: marco que se adapta a cada imagen (sin recorte) + resplandor ambiental tipo YouTube; lupa 5x y lightbox; o video -->
+          <!-- foto principal: marco que se adapta a cada imagen (sin recorte); el video lleva resplandor ambiental tipo YouTube; lupa 5x y lightbox -->
           <div class="kiu-det-main" onMouseMove="{{ zoomMove }}" onMouseLeave="{{ zoomOff }}" onClick="{{ openLightbox }}" style="position: relative; height: 540px; cursor: {{ mainCursor }};">
             <sc-if value="{{ mainIsVideo }}" hint-placeholder-val="{{ false }}">
               <kiu-ambient video-src="{{ mainVideoSrc }}" poster="{{ mainVideoPoster }}" style="position: absolute; inset: 0; z-index: 1;"></kiu-ambient>
