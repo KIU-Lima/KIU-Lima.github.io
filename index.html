@@ -460,7 +460,7 @@ class Component extends DCLogic {
     window.addEventListener('popstate', this._onRoute);
     this._featTimer = setInterval(() => {
       if (this.state.page !== 'home') return;
-      this.goFeat((this.state.featIdx + 1) % Object.keys(this.productSlugMap()).length);
+      this.goFeat((this.state.featIdx + 1) % this.featuredIds().length);
     }, 4500);
   }
 
@@ -476,6 +476,10 @@ class Component extends DCLogic {
     if (i === this.state.featIdx) return;
     this.setState({ featFade: true });
     setTimeout(() => this.setState({ featIdx: i, featFade: false }), 500);
+  }
+  featuredIds() {
+    // el árbol de la abundancia no participa en el destacado rotativo
+    return Object.keys(this.productSlugMap()).filter((id) => id !== 'prod-abundancia');
   }
   closeTimer = null;
   selTimers = [];
@@ -875,6 +879,8 @@ class Component extends DCLogic {
     const cartCount = cartItems.reduce((a, b) => a + b.qty, 0);
     const cartSubtotal = cartItems.reduce((a, b) => a + b.line, 0);
     const detShop = this.state.product ? shopv[this.state.product.imgId] : null;
+    const featIds = this.featuredIds();
+    const featI = imgIds.indexOf(featIds[this.state.featIdx % featIds.length]);
 
     return {
       es,
@@ -929,17 +935,17 @@ class Component extends DCLogic {
       listOpacity: this.state.listFade ? 0 : 1,
       listShift: this.state.listFade ? '10px' : '0px',
       featBadge: es ? 'Destacado' : 'Featured',
-      featImgId: imgIds[this.state.featIdx],
-      featSrc: coverByImg[imgIds[this.state.featIdx]] || '',
-      featPlaceholder: placeholders[this.state.featIdx],
-      featCurName: t.products[this.state.featIdx].name,
-      featCurPrice: t.products[this.state.featIdx].price,
+      featImgId: imgIds[featI],
+      featSrc: coverByImg[imgIds[featI]] || '',
+      featPlaceholder: placeholders[featI],
+      featCurName: t.products[featI].name,
+      featCurPrice: t.products[featI].price,
       featOpacity: this.state.featFade ? 0 : 1,
       featOpen: (e) => {
-        const i = this.state.featIdx;
+        const i = featI;
         this.openProduct({ name: t.products[i].name, price: t.products[i].price, imgId: imgIds[i], desc: descs[imgIds[i]] }, e);
       },
-      featDots: imgIds.map((_, i) => ({
+      featDots: featIds.map((_, i) => ({
         bg: i === this.state.featIdx ? '#ffffff' : 'rgba(255,255,255,0.45)',
         pick: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.goFeat(i); },
       })),
