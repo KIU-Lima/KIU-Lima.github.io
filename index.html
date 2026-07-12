@@ -814,8 +814,8 @@ class Component extends DCLogic {
     t.products.forEach((p, i) => { catalogMap[imgIds[i]] = { name: p.name, price: p.price }; });
 
     // fotos reales: portada (ancha) y cuadrada (detalle)
-    const coverByImg = { 'hero-img': 'uploads/protada_rectangular.png', 'prod-cuenco': 'uploads/silencio-portada.png', 'prod-utensilios': 'uploads/david-portada.png', 'prod-macetero': 'uploads/burro-portada.png', 'prod-movil': 'uploads/puerco-portada.png', 'prod-cesta': 'uploads/elefantes-portada.png', 'prod-david-cabeza': 'uploads/david-cabeza-portada.png', 'prod-frutales': 'uploads/frutales-portada.png', 'prod-abundancia': 'uploads/abundancia-portada.png' };
-    const squareByImg = { 'hero-img': 'uploads/1.png', 'prod-cuenco': 'uploads/4-e6379f43.png', 'prod-utensilios': 'uploads/david-4.png', 'prod-macetero': 'uploads/burro-1.png', 'prod-movil': 'uploads/puerco-4.png', 'prod-cesta': 'uploads/elefantes-1.png', 'prod-david-cabeza': 'uploads/david-cabeza-1.png', 'prod-frutales': 'uploads/frutales-1.png', 'prod-abundancia': 'uploads/abundancia-2.png' };
+    const coverByImg = { 'hero-img': 'uploads/protada_rectangular.png', 'prod-cuenco': 'uploads/silencio-portada.png', 'prod-utensilios': 'uploads/david-portada.png', 'prod-macetero': 'uploads/burro-portada.png', 'prod-movil': 'uploads/puerco-portada.png', 'prod-cesta': 'uploads/elefantes-portada.png', 'prod-david-cabeza': 'uploads/david-cabeza-portada.png', 'prod-frutales': 'uploads/frutales-portada.png', 'prod-abundancia': 'uploads/abundancia-1.png' };
+    const squareByImg = { 'hero-img': 'uploads/1.png', 'prod-cuenco': 'uploads/4-e6379f43.png', 'prod-utensilios': 'uploads/david-4.png', 'prod-macetero': 'uploads/burro-1.png', 'prod-movil': 'uploads/puerco-4.png', 'prod-cesta': 'uploads/elefantes-1.png', 'prod-david-cabeza': 'uploads/david-cabeza-1.png', 'prod-frutales': 'uploads/frutales-1.png', 'prod-abundancia': 'uploads/abundancia-1.png' };
     // galería por producto: [foto principal, cuadrada 2, cuadrada 3, ...]
     const galleryByImg = {
       'hero-img': ['uploads/1.png', 'uploads/2.png', 'uploads/3.png', 'uploads/4.png', 'uploads/5.png', 'uploads/6.png'],
@@ -826,7 +826,7 @@ class Component extends DCLogic {
       'prod-cesta': ['uploads/elefantes-1.png', 'uploads/elefantes-2.png', 'uploads/elefantes-3.png', 'uploads/elefantes-4.png', 'uploads/elefantes-5.png'],
       'prod-david-cabeza': ['uploads/david-cabeza-1.png', 'uploads/david-cabeza-2.png', 'uploads/david-cabeza-3.png', 'uploads/david-cabeza-4.png'],
       'prod-frutales': ['uploads/frutales-1.png', 'uploads/frutales-portada.png'],
-      'prod-abundancia': ['uploads/abundancia-1.png', 'uploads/abundancia-2.png', 'uploads/abundancia-3.png', 'uploads/abundancia-4.png', 'uploads/abundancia-5.png', 'uploads/abundancia-6.png'],
+      'prod-abundancia': ['uploads/abundancia-1.png', 'uploads/abundancia-2.png', 'uploads/abundancia-3.png', 'uploads/abundancia-4.png', 'uploads/abundancia-5.png', 'uploads/abundancia-6.png', 'uploads/abundancia-7.png', 'uploads/abundancia-8.png'],
     };
     const gal = this.state.product ? (galleryByImg[this.state.product.imgId] || ['', '', '']) : ['', '', ''];
     // video opcional por producto (aparece como última miniatura). Para agregar otro: 'imgId': 'uploads/archivo.mp4'
