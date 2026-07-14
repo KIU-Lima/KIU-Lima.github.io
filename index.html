@@ -37,13 +37,11 @@
       .kiu-nav-search { flex: 1 1 auto !important; width: auto !important; min-width: 0 !important; font-size: 16px !important; }
       .kiu-nav-cat, .kiu-nav-con { display: none !important; }
       .kiu-nav-lang { margin-left: 2px !important; }
-      /* catálogo: filtros arriba en fila, productos abajo */
+      /* catálogo: barra de filtros compacta y productos abajo */
       #catalogo { padding: 104px 18px 72px !important; }
-      .kiu-cat-head { flex-wrap: wrap !important; gap: 10px !important; margin-bottom: 36px !important; }
+      .kiu-cat-head { flex-wrap: wrap !important; gap: 10px !important; margin-bottom: 20px !important; }
       .kiu-cat-title { font-size: 30px !important; }
-      .kiu-cat-grid { grid-template-columns: 1fr !important; gap: 30px !important; }
-      .kiu-filters { position: static !important; flex-direction: row !important; flex-wrap: wrap !important; gap: 18px 32px !important; border-right: none !important; border-bottom: 1px solid rgba(0,0,0,0.1) !important; padding: 0 0 22px !important; }
-      .kiu-filters-title { flex: 0 0 100%; }
+      .kiu-trust { padding: 22px 26px !important; margin-top: 48px !important; gap: 18px 28px !important; }
       .kiu-brand { padding: 52px 24px !important; }
       .kiu-brand p { font-size: 20px !important; }
       /* página de producto: todo en una columna */
@@ -71,6 +69,7 @@
       .kiu-feat-pill span:first-child { font-size: 13.5px !important; }
       .kiu-feat-pill span:last-child { font-size: 12.5px !important; }
       .kiu-feat-dots { right: 12px !important; bottom: auto !important; top: 14px !important; }
+      .kiu-trust { flex-direction: column !important; align-items: flex-start !important; }
     }
   </style>
 </helmet>
@@ -188,7 +187,7 @@
   <!-- CATALOGO (primero) -->
   <section id="catalogo" data-screen-label="Catálogo" style="padding: 136px 64px 128px;">
     <div style="max-width: 1520px; margin: 0 auto;">
-      <div class="kiu-cat-head" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 0 0 72px; animation: kiuFadeUp 0.6s ease both;">
+      <div class="kiu-cat-head" style="display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 0 0 28px; animation: kiuFadeUp 0.6s ease both;">
         <h1 class="kiu-cat-title" style="font-size: 38px; font-weight: 600; letter-spacing: -0.02em; color: #1d1d1f; margin: 0;">{{ catTitle }}</h1>
         <div style="display: flex; align-items: center; gap: 12px;">
           <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
@@ -198,39 +197,61 @@
             <button onClick="{{ pickAll }}" style="font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; color: #0071e3; background: rgba(0,113,227,0.08); border: none; border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: all 0.25s ease;" style-hover="background: rgba(0,113,227,0.15);">✕ {{ filterLabel }}</button>
           </sc-if>
         </div>
-        <span style="font-size: 14px; color: #86868b; font-weight: 400;">{{ catNote }}</span>
       </div>
 
-      <!-- filtros + catálogo centrado -->
-      <div class="kiu-cat-grid" style="display: grid; grid-template-columns: 180px 1fr; gap: 64px; align-items: start; animation: kiuFadeUp 0.6s ease 0.1s both;">
-        <aside class="kiu-filters" style="position: sticky; top: 110px; display: flex; flex-direction: column; gap: 22px; border-right: 1px solid rgba(0,0,0,0.1); padding: 8px 28px 24px 0;">
-          <span class="kiu-filters-title" style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #86868b; font-weight: 600;">{{ filtersTitle }}</span>
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ priceTitle }}</span>
-            <sc-for list="{{ priceOpts }}" as="f" hint-placeholder-count="3">
-              <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73;">
-                <input type="checkbox" checked="{{ f.checked }}" onChange="{{ f.toggle }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
-                <span>{{ f.label }}</span>
-              </label>
+      <!-- barra de filtros con menús desplegables -->
+      <sc-if value="{{ anyFilterMenu }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ closeFilterMenus }}" style="position: fixed; inset: 0; z-index: 21; background: transparent;"></div>
+      </sc-if>
+      <div class="kiu-filterbar" style="position: relative; z-index: 31; display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 0 0 20px; animation: kiuFadeUp 0.6s ease 0.05s both;">
+        <button onClick="{{ toggleFilters }}" style="font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 600; color: #1d1d1f; background: #ffffff; border: 1px solid rgba(0,0,0,0.16); border-radius: 999px; padding: 11px 18px; cursor: pointer; transition: all 0.25s ease;" style-hover="border-color: rgba(0,0,0,0.4);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.8" stroke-linecap="round"><path d="M3 7h18M3 12h18M3 17h18"/><circle cx="15" cy="7" r="2.6" fill="#ffffff"/><circle cx="8" cy="12" r="2.6" fill="#ffffff"/><circle cx="17" cy="17" r="2.6" fill="#ffffff"/></svg>
+          {{ filtersLabel }}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ filtersRot }}); transition: transform 0.3s ease;"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <sc-if value="{{ filtersOpen }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ filterMenus }}" as="fm" hint-placeholder-count="3">
+            <div style="position: relative; z-index: 22;">
+              <button onClick="{{ fm.toggle }}" style="font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #1d1d1f; background: #ffffff; border: {{ fm.border }}; border-radius: 999px; padding: 11px 18px; cursor: pointer; transition: all 0.25s ease;" style-hover="border-color: rgba(0,0,0,0.4);">
+                {{ fm.label }}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ fm.rot }}); transition: transform 0.3s ease;"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div style="position: absolute; top: calc(100% + 8px); left: 0; z-index: 23; display: {{ fm.panelDisplay }}; flex-direction: column; gap: 13px; min-width: 205px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,0.13); padding: 17px 18px;">
+                <sc-for list="{{ fm.opts }}" as="fo" hint-placeholder-count="3">
+                  <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73; white-space: nowrap;">
+                    <input type="checkbox" checked="{{ fo.checked }}" onChange="{{ fo.toggle }}" style="width: 16px; height: 16px; accent-color: #b08d57; cursor: pointer;">
+                    <span>{{ fo.label }}</span>
+                  </label>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </sc-if>
+        <button onClick="{{ clearFilters }}" style="font-family: 'DM Sans', sans-serif; margin-left: auto; font-size: 14px; font-weight: 600; color: #b08d57; background: transparent; border: none; padding: 8px 4px; cursor: pointer; transition: color 0.25s ease;" style-hover="color: #8f6f3f;">{{ clearLabel }}</button>
+      </div>
+
+      <!-- nota + ordenar -->
+      <div style="position: relative; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin: 0 0 40px; animation: kiuFadeUp 0.6s ease 0.08s both;">
+        <span style="display: inline-flex; align-items: center; gap: 9px; font-size: 14px; color: #6e6e73;">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#86868b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v9M8.2 9.7l7.6 4.6M15.8 9.7l-7.6 4.6"/></svg>
+          {{ catNote }}
+        </span>
+        <div style="position: relative; z-index: 22;">
+          <button onClick="{{ toggleSortMenu }}" style="font-family: 'DM Sans', sans-serif; display: inline-flex; align-items: center; gap: 7px; font-size: 14px; color: #6e6e73; background: transparent; border: none; padding: 6px 2px; cursor: pointer;">
+            {{ sortLabel }}
+            <span style="color: #1d1d1f; font-weight: 600;">{{ sortValue }}</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6e6e73" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate({{ sortRot }}); transition: transform 0.3s ease;"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div style="position: absolute; top: calc(100% + 8px); right: 0; z-index: 23; display: {{ sortPanelDisplay }}; flex-direction: column; min-width: 215px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,0.13); padding: 8px;">
+            <sc-for list="{{ sortOpts }}" as="so" hint-placeholder-count="3">
+              <button onClick="{{ so.pick }}" style="font-family: 'DM Sans', sans-serif; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; font-size: 13.5px; font-weight: {{ so.weight }}; color: #1d1d1f; background: transparent; border: none; border-radius: 8px; padding: 10px 12px; cursor: pointer; white-space: nowrap; transition: background 0.2s ease;" style-hover="background: #f5f5f7;">
+                {{ so.label }}
+                <span style="color: #b08d57; font-size: 13px; opacity: {{ so.checkOpacity }};">✓</span>
+              </button>
             </sc-for>
           </div>
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ matTitle }}</span>
-            <sc-for list="{{ matOpts }}" as="m" hint-placeholder-count="4">
-              <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73;">
-                <input type="checkbox" checked="{{ m.checked }}" onChange="{{ m.toggle }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
-                <span>{{ m.label }}</span>
-              </label>
-            </sc-for>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 10px;">
-            <span style="font-size: 13.5px; font-weight: 600; color: #1d1d1f;">{{ shipTitle2 }}</span>
-            <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73;">
-              <input type="checkbox" checked="{{ freeChecked }}" onChange="{{ toggleFree }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
-              <span>{{ freeLabel }}</span>
-            </label>
-          </div>
-        </aside>
+        </div>
+      </div>
 
       <div style="width: 100%; display: flex; flex-direction: column; gap: 64px; opacity: {{ listOpacity }}; transform: translateY({{ listShift }}); transition: opacity 0.28s ease, transform 0.28s ease;">
 
@@ -268,6 +289,30 @@
         </sc-for>
       </div>
       </div>
+
+      <!-- barra de confianza -->
+      <div class="kiu-trust" style="display: flex; align-items: center; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; margin-top: 72px; background: #f8f4ee; border: 1px solid rgba(0,0,0,0.05); border-radius: 18px; padding: 26px 56px; animation: kiuFadeUp 0.6s ease both;">
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 14.5px; font-weight: 600; color: #1d1d1f;">{{ trust1a }}</span>
+            <span style="font-size: 13px; color: #6e6e73;">{{ trust1b }}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><rect x="1.5" y="5" width="13.5" height="11" rx="1.5"/><path d="M15 9h3.8l3.2 3.2V16h-7z"/><circle cx="6" cy="18.4" r="1.9"/><circle cx="17.6" cy="18.4" r="1.9"/></svg>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 14.5px; font-weight: 600; color: #1d1d1f;">{{ trust2a }}</span>
+            <span style="font-size: 13px; color: #6e6e73;">{{ trust2b }}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#b08d57" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"/><circle cx="12" cy="15.7" r="1.2" fill="#b08d57" stroke="none"/></svg>
+          <div style="display: flex; flex-direction: column; gap: 2px;">
+            <span style="font-size: 14.5px; font-weight: 600; color: #1d1d1f;">{{ trust3a }}</span>
+            <span style="font-size: 13px; color: #6e6e73;">{{ trust3b }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -429,7 +474,7 @@
 }">
 class Component extends DCLogic {
   state = (() => {
-    const s = { lang: null, openMenu: null, sel: null, page: 'home', product: null, white: false, cat: 'all', query: '', appliedCat: 'all', appliedQuery: '', detSel: 0, zoomOn: false, zoomX: 50, zoomY: 50, frameHover: false, zoomFrame: null, lightbox: false, priceSel: {}, freeSel: false, matSel: {}, appliedPriceSel: {}, appliedFreeSel: false, appliedMatSel: {}, listFade: false, featIdx: 0, featFade: false, cartOpen: false, cart: [], shopVariants: {} };
+    const s = { lang: null, openMenu: null, sel: null, page: 'home', product: null, white: false, cat: 'all', query: '', appliedCat: 'all', appliedQuery: '', detSel: 0, zoomOn: false, zoomX: 50, zoomY: 50, frameHover: false, zoomFrame: null, lightbox: false, priceSel: {}, freeSel: false, matSel: {}, appliedPriceSel: {}, appliedFreeSel: false, appliedMatSel: {}, filtersOpen: true, filterMenu: null, sortBy: 'featured', appliedSortBy: 'featured', listFade: false, featIdx: 0, featFade: false, cartOpen: false, cart: [], shopVariants: {} };
     try {
       const m = (window.location.hash || '').match(/^#\/?producto\/([^?&\/]+)/i);
       if (m) {
@@ -447,7 +492,7 @@ class Component extends DCLogic {
     this.setState({ listFade: true });
     clearTimeout(this._filterT);
     this._filterT = setTimeout(() => {
-      this.setState({ appliedCat: this.state.cat, appliedQuery: this.state.query, appliedPriceSel: this.state.priceSel, appliedFreeSel: this.state.freeSel, appliedMatSel: this.state.matSel, listFade: false });
+      this.setState({ appliedCat: this.state.cat, appliedQuery: this.state.query, appliedPriceSel: this.state.priceSel, appliedFreeSel: this.state.freeSel, appliedMatSel: this.state.matSel, appliedSortBy: this.state.sortBy, listFade: false });
     }, 260);
   }
 
@@ -901,38 +946,85 @@ class Component extends DCLogic {
           open: (e) => this.openProduct({ name: p.name, price: p.price, imgId: imgIds[i], desc: descs[imgIds[i]] }, e),
         }))
         .filter((p) => passes(p))
+        .sort((a, b) => {
+          const s = this.state.appliedSortBy;
+          if (s === 'asc') return priceNum(a.price) - priceNum(b.price);
+          if (s === 'desc') return priceNum(b.price) - priceNum(a.price);
+          return 0;
+        })
         .map((p) => ({ ...p, span: 'auto', aspect: '16 / 10' })),
 
-      // barra lateral de filtros
-      filtersTitle: es ? 'Filtros' : 'Filters',
-      priceTitle: es ? 'Precio' : 'Price',
-      shipTitle2: es ? 'Envío' : 'Shipping',
-      priceOpts: [
-        { id: 'lt400', label: es ? 'Menos de $400' : 'Under $400' },
-        { id: 'mid', label: '$400 – $550' },
-        { id: 'gt550', label: es ? 'Más de $550' : 'Over $550' },
+      // barra de filtros con menús desplegables
+      filtersLabel: es ? 'Filtros' : 'Filters',
+      filtersOpen: this.state.filtersOpen,
+      filtersRot: this.state.filtersOpen ? '180deg' : '0deg',
+      toggleFilters: () => this.setState({ filtersOpen: !this.state.filtersOpen, filterMenu: null }),
+      anyFilterMenu: !!this.state.filterMenu,
+      closeFilterMenus: () => this.setState({ filterMenu: null }),
+      clearLabel: es ? 'Limpiar' : 'Clear',
+      clearFilters: () => { this.setState({ priceSel: {}, matSel: {}, freeSel: false, cat: 'all', filterMenu: null }); this.fadeApply(); },
+      filterMenus: (() => {
+        const priceOpts = [
+          { id: 'lt400', label: es ? 'Menos de $400' : 'Under $400' },
+          { id: 'mid', label: '$400 – $550' },
+          { id: 'gt550', label: es ? 'Más de $550' : 'Over $550' },
+        ].map((o) => ({
+          ...o,
+          checked: !!this.state.priceSel[o.id],
+          toggle: () => { this.setState({ priceSel: { ...this.state.priceSel, [o.id]: !this.state.priceSel[o.id] } }); this.fadeApply(); },
+        }));
+        const matOpts = [
+          { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
+          { id: 'yeso', label: es ? 'Yeso cerámico' : 'Ceramic plaster' },
+          { id: 'vidrio', label: es ? 'Vidrio' : 'Glass' },
+        ].map((o) => ({
+          ...o,
+          checked: !!this.state.matSel[o.id],
+          toggle: () => { this.setState({ matSel: { ...this.state.matSel, [o.id]: !this.state.matSel[o.id] } }); this.fadeApply(); },
+        }));
+        const shipOpts = [{
+          id: 'free',
+          label: es ? 'Envío gratis' : 'Free shipping',
+          checked: this.state.freeSel,
+          toggle: () => { this.setState({ freeSel: !this.state.freeSel }); this.fadeApply(); },
+        }];
+        return [
+          { id: 'price', label: es ? 'Precio' : 'Price', opts: priceOpts, active: priceOpts.some((o) => o.checked) },
+          { id: 'mat', label: es ? 'Materiales' : 'Materials', opts: matOpts, active: matOpts.some((o) => o.checked) },
+          { id: 'ship', label: es ? 'Envío' : 'Shipping', opts: shipOpts, active: this.state.freeSel },
+        ].map((m) => ({
+          ...m,
+          rot: this.state.filterMenu === m.id ? '180deg' : '0deg',
+          panelDisplay: this.state.filterMenu === m.id ? 'flex' : 'none',
+          border: m.active ? '1.5px solid #b08d57' : '1px solid rgba(0,0,0,0.16)',
+          toggle: () => this.setState({ filterMenu: this.state.filterMenu === m.id ? null : m.id }),
+        }));
+      })(),
+
+      // ordenar
+      sortLabel: es ? 'Ordenar:' : 'Sort:',
+      sortValue: ({ featured: es ? 'Destacados' : 'Featured', asc: es ? 'Precio: menor a mayor' : 'Price: low to high', desc: es ? 'Precio: mayor a menor' : 'Price: high to low' })[this.state.sortBy] || '',
+      sortRot: this.state.filterMenu === 'sort' ? '180deg' : '0deg',
+      sortPanelDisplay: this.state.filterMenu === 'sort' ? 'flex' : 'none',
+      toggleSortMenu: () => this.setState({ filterMenu: this.state.filterMenu === 'sort' ? null : 'sort' }),
+      sortOpts: [
+        { id: 'featured', label: es ? 'Destacados' : 'Featured' },
+        { id: 'asc', label: es ? 'Precio: menor a mayor' : 'Price: low to high' },
+        { id: 'desc', label: es ? 'Precio: mayor a menor' : 'Price: high to low' },
       ].map((o) => ({
         ...o,
-        checked: !!this.state.priceSel[o.id],
-        toggle: () => {
-          const sel = { ...this.state.priceSel, [o.id]: !this.state.priceSel[o.id] };
-          this.setState({ priceSel: sel });
-          this.fadeApply();
-        },
+        weight: this.state.sortBy === o.id ? '600' : '400',
+        checkOpacity: this.state.sortBy === o.id ? '1' : '0',
+        pick: () => { this.setState({ sortBy: o.id, filterMenu: null }); this.fadeApply(); },
       })),
-      freeLabel: es ? 'Envío gratis' : 'Free shipping',
-      freeChecked: this.state.freeSel,
-      toggleFree: () => { this.setState({ freeSel: !this.state.freeSel }); this.fadeApply(); },
-      matTitle: es ? 'Materiales' : 'Materials',
-      matOpts: [
-        { id: 'ceramica', label: es ? 'Cerámica' : 'Ceramic' },
-        { id: 'yeso', label: es ? 'Yeso cerámico' : 'Ceramic plaster' },
-        { id: 'vidrio', label: es ? 'Vidrio' : 'Glass' },
-      ].map((o) => ({
-        ...o,
-        checked: !!this.state.matSel[o.id],
-        toggle: () => { this.setState({ matSel: { ...this.state.matSel, [o.id]: !this.state.matSel[o.id] } }); this.fadeApply(); },
-      })),
+
+      // barra de confianza
+      trust1a: es ? 'Piezas únicas' : 'One-of-a-kind pieces',
+      trust1b: es ? 'Hechas a mano' : 'Handmade',
+      trust2a: es ? 'Envío gratis' : 'Free shipping',
+      trust2b: es ? 'En compras +$800 MXN' : 'On orders over $800 MXN',
+      trust3a: es ? 'Compra segura' : 'Secure checkout',
+      trust3b: es ? 'Sitio 100% protegido' : '100% protected site',
 
       // destacado rotativo
       showFeat: (this.state.appliedQuery || '').trim() === '' && this.state.appliedCat === 'all' && !this.state.appliedFreeSel && !((this.state.appliedPriceSel || {}).lt400 || (this.state.appliedPriceSel || {}).mid || (this.state.appliedPriceSel || {}).gt550) && !Object.keys(this.state.appliedMatSel || {}).some((k) => (this.state.appliedMatSel || {})[k]),
