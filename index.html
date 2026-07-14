@@ -268,7 +268,7 @@
               <div style="position: absolute; top: calc(100% + 8px); left: 0; z-index: 23; display: {{ fm.panelDisplay }}; flex-direction: column; gap: 13px; min-width: 205px; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; box-shadow: 0 18px 44px rgba(0,0,0,0.13); padding: 17px 18px;">
                 <sc-for list="{{ fm.opts }}" as="fo" hint-placeholder-count="3">
                   <label class="kiu-filt" style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #6e6e73; white-space: nowrap;">
-                    <input type="checkbox" checked="{{ fo.checked }}" onChange="{{ fo.toggle }}" style="width: 16px; height: 16px; accent-color: #1d873c; cursor: pointer;">
+                    <input type="checkbox" checked="{{ fo.checked }}" onChange="{{ fo.toggle }}" style="width: 16px; height: 16px; accent-color: #0071e3; cursor: pointer;">
                     <span>{{ fo.label }}</span>
                   </label>
                 </sc-for>
@@ -276,7 +276,7 @@
             </div>
           </sc-for>
         </sc-if>
-        <button onClick="{{ clearFilters }}" style="font-family: 'DM Sans', sans-serif; margin-left: auto; font-size: 14px; font-weight: 600; color: #1d873c; background: transparent; border: none; padding: 8px 4px; cursor: pointer; transition: color 0.25s ease;" style-hover="color: #14602b;">{{ clearLabel }}</button>
+        <button onClick="{{ clearFilters }}" style="font-family: 'DM Sans', sans-serif; margin-left: auto; font-size: 14px; font-weight: 600; color: #0071e3; background: transparent; border: none; padding: 8px 4px; cursor: pointer; transition: color 0.25s ease;" style-hover="color: #0077ed;">{{ clearLabel }}</button>
       </div>
 
       <!-- nota + ordenar -->
@@ -295,7 +295,7 @@
             <sc-for list="{{ sortOpts }}" as="so" hint-placeholder-count="3">
               <button onClick="{{ so.pick }}" style="font-family: 'DM Sans', sans-serif; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; font-size: 13.5px; font-weight: {{ so.weight }}; color: #1d1d1f; background: transparent; border: none; border-radius: 8px; padding: 10px 12px; cursor: pointer; white-space: nowrap; transition: background 0.2s ease;" style-hover="background: #f5f5f7;">
                 {{ so.label }}
-                <span style="color: #1d873c; font-size: 13px; opacity: {{ so.checkOpacity }};">✓</span>
+                <span style="color: #0071e3; font-size: 13px; opacity: {{ so.checkOpacity }};">✓</span>
               </button>
             </sc-for>
           </div>
@@ -349,21 +349,21 @@
       <!-- barra de confianza -->
       <div class="kiu-trust" style="display: flex; align-items: center; justify-content: space-between; gap: 24px 40px; flex-wrap: wrap; margin-top: 72px; background: #f8f4ee; border: 1px solid rgba(0,0,0,0.05); border-radius: 18px; padding: 26px 56px; animation: kiuFadeUp 0.6s ease both;">
         <div style="display: flex; align-items: center; gap: 14px;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1d873c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
           <div style="display: flex; flex-direction: column; gap: 2px;">
             <span style="font-size: 14.5px; font-weight: 600; color: #1d1d1f;">{{ trust1a }}</span>
             <span style="font-size: 13px; color: #6e6e73;">{{ trust1b }}</span>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 14px;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1d873c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><rect x="1.5" y="5" width="13.5" height="11" rx="1.5"/><path d="M15 9h3.8l3.2 3.2V16h-7z"/><circle cx="6" cy="18.4" r="1.9"/><circle cx="17.6" cy="18.4" r="1.9"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><rect x="1.5" y="5" width="13.5" height="11" rx="1.5"/><path d="M15 9h3.8l3.2 3.2V16h-7z"/><circle cx="6" cy="18.4" r="1.9"/><circle cx="17.6" cy="18.4" r="1.9"/></svg>
           <div style="display: flex; flex-direction: column; gap: 2px;">
             <span style="font-size: 14.5px; font-weight: 600; color: #1d1d1f;">{{ trust2a }}</span>
             <span style="font-size: 13px; color: #6e6e73;">{{ trust2b }}</span>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 14px;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1d873c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"/><circle cx="12" cy="15.7" r="1.2" fill="#1d873c" stroke="none"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: none;"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"/><circle cx="12" cy="15.7" r="1.2" fill="#0071e3" stroke="none"/></svg>
           <div style="display: flex; flex-direction: column; gap: 2px;">
             <span style="font-size: 14.5px; font-weight: 600; color: #1d1d1f;">{{ trust3a }}</span>
             <span style="font-size: 13px; color: #6e6e73;">{{ trust3b }}</span>
@@ -426,7 +426,7 @@
               <span style="display: {{ detOldDisplay }}; font-size: 17px; color: #86868b; text-decoration: line-through;">{{ detOldPrice }}</span>
               <span style="display: {{ detSaleDisplay }}; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #ffffff; background: #0071e3; padding: 5px 10px; border-radius: 8px;">{{ saleTagLabel }}</span>
             </div>
-            <span style="font-size: 14px; font-weight: 600; color: #1d873c;">{{ detShipFree }}</span>
+            <span style="font-size: 14px; font-weight: 600; color: #0071e3;">{{ detShipFree }}</span>
             <span style="font-size: 14px; font-weight: 600; color: {{ detStockColor }};">{{ detStock }}</span>
             <!-- producto conectado a Shopify: compra directa + carrito -->
             <sc-if value="{{ detCanBuy }}" hint-placeholder-val="{{ false }}">
@@ -1078,7 +1078,7 @@ class Component extends DCLogic {
           delay: (i * 0.11) + 's',
           rot: this.state.filterMenu === m.id ? '180deg' : '0deg',
           panelDisplay: this.state.filterMenu === m.id ? 'flex' : 'none',
-          border: m.active ? '1.5px solid #1d873c' : '1px solid rgba(0,0,0,0.16)',
+          border: m.active ? '1.5px solid #0071e3' : '1px solid rgba(0,0,0,0.16)',
           toggle: () => this.setState({ filterMenu: this.state.filterMenu === m.id ? null : m.id }),
         }));
       })(),
