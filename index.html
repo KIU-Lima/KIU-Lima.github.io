@@ -47,18 +47,6 @@
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask-composite: exclude;
     }
-    /* Bisel refractivo sobre el borde de la foto: anillo de 10px que dobla de verdad
-       los píxeles que quedan debajo (feDisplacementMap = IOR simulado, solo Chromium;
-       Safari/Firefox degradan a blur suave). Transparente: sin relleno blanco sólido. */
-    .kiu-glass-bezel { position: absolute; inset: 0; pointer-events: none; border-radius: 16px; padding: 14px;
-      -webkit-backdrop-filter: blur(1.5px) saturate(1.15) brightness(1.05);
-      backdrop-filter: url(#kiuGlassIor) blur(1px) saturate(1.15) brightness(1.05); /* al final: gana donde url() esté soportado (Chromium) */
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), inset 1px 2px 6px rgba(255,255,255,0.42), inset -1px -2px 6px rgba(22,26,34,0.2);
-    }
     image-slot { display: block; width: 100%; height: 100%; }
     .kiu-hov:hover { color: #0071e3 !important; }
     .kiu-badge:hover { background: #0071e3 !important; }
@@ -115,15 +103,6 @@
 </helmet>
 
 <div style="font-family: 'DM Sans', sans-serif; color: #1d1d1f; background: #ffffff; min-height: calc(100vh / 0.9);">
-
-  <!-- filtro de refracción del cristal: mapa de desplazamiento que "dobla" (IOR simulado)
-       lo que queda bajo el bisel; lo consume .kiu-glass-bezel vía backdrop-filter (Chromium) -->
-  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
-    <filter id="kiuGlassIor" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.016" numOctaves="2" seed="7" result="n"/>
-      <feDisplacementMap in="SourceGraphic" in2="n" scale="40" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </svg>
 
   <!-- PRODUCT LIFT OVERLAY -->
   <sc-if value="{{ selVisible }}" hint-placeholder-val="{{ false }}">
@@ -329,7 +308,6 @@
             <div style="position: relative; display: flex; flex-direction: column; gap: 14px; padding: 12px 12px 16px;">
             <div style="position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: {{ p.aspect }}; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 0 0 1px rgba(255,255,255,0.8), 0 4px 10px rgba(22,26,34,0.14);">
               <image-slot id="{{ p.imgId }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.placeholder }}" style="width: 100%; height: 100%; display: block;"></image-slot>
-              <div class="kiu-glass-bezel"></div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; text-align: left; padding: 0 6px;">
               <span style="font-size: 16px; font-weight: 600; color: #1d1d1f;">{{ p.name }}</span>
