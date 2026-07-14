@@ -47,6 +47,18 @@
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask-composite: exclude;
     }
+    /* Bisel refractivo sobre el borde de la foto: anillo de 10px que dobla de verdad
+       los píxeles que quedan debajo (feDisplacementMap = IOR simulado, solo Chromium;
+       Safari/Firefox degradan a blur suave). Transparente: sin relleno blanco sólido. */
+    .kiu-glass-bezel { position: absolute; inset: 0; pointer-events: none; border-radius: 16px; padding: 14px;
+      -webkit-backdrop-filter: blur(1.5px) saturate(1.15) brightness(1.05);
+      backdrop-filter: url(#kiuGlassIor) blur(1px) saturate(1.15) brightness(1.05); /* al final: gana donde url() esté soportado (Chromium) */
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), inset 1px 2px 6px rgba(255,255,255,0.42), inset -1px -2px 6px rgba(22,26,34,0.2);
+    }
     image-slot { display: block; width: 100%; height: 100%; }
     .kiu-hov:hover { color: #0071e3 !important; }
     .kiu-badge:hover { background: #0071e3 !important; }
@@ -103,6 +115,15 @@
 </helmet>
 
 <div style="font-family: 'DM Sans', sans-serif; color: #1d1d1f; background: #ffffff; min-height: calc(100vh / 0.9);">
+
+  <!-- filtro de refracción del cristal: mapa de desplazamiento que "dobla" (IOR simulado)
+       lo que queda bajo el bisel; lo consume .kiu-glass-bezel vía backdrop-filter (Chromium) -->
+  <svg width="0" height="0" style="position: absolute;" aria-hidden="true">
+    <filter id="kiuGlassIor" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.016" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="40" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
 
   <!-- PRODUCT LIFT OVERLAY -->
   <sc-if value="{{ selVisible }}" hint-placeholder-val="{{ false }}">
@@ -304,18 +325,19 @@
 
       <div class="kiu-prod-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 48px;">
         <sc-for list="{{ products }}" as="p" hint-placeholder-count="7">
-          <article onClick="{{ p.open }}" style="grid-column: {{ p.span }}; position: relative; cursor: pointer; border-radius: 24px; overflow: hidden; background: linear-gradient(165deg, rgba(252,252,253,0.92), rgba(240,242,246,0.72)); backdrop-filter: blur(10px) saturate(1.2); -webkit-backdrop-filter: blur(10px) saturate(1.2); box-shadow: 0 14px 34px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.05); transition: transform 0.35s cubic-bezier(0.33, 1, 0.5, 1), box-shadow 0.35s ease;" style-hover="transform: translateY(-6px); box-shadow: 0 22px 48px rgba(0,0,0,0.14), 0 3px 8px rgba(0,0,0,0.06);">
+          <article onClick="{{ p.open }}" style="grid-column: {{ p.span }}; position: relative; cursor: pointer; border-radius: 24px; overflow: hidden; background: linear-gradient(165deg, rgba(252,252,253,0.7), rgba(240,242,246,0.42)); backdrop-filter: blur(14px) saturate(1.25); -webkit-backdrop-filter: blur(14px) saturate(1.25); box-shadow: 0 14px 34px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.05); transition: transform 0.35s cubic-bezier(0.33, 1, 0.5, 1), box-shadow 0.35s ease;" style-hover="transform: translateY(-6px); box-shadow: 0 22px 48px rgba(0,0,0,0.14), 0 3px 8px rgba(0,0,0,0.06);">
             <div style="position: relative; display: flex; flex-direction: column; gap: 14px; padding: 12px 12px 16px;">
             <div style="position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: {{ p.aspect }}; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 0 0 1px rgba(255,255,255,0.8), 0 4px 10px rgba(22,26,34,0.14);">
               <image-slot id="{{ p.imgId }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.placeholder }}" style="width: 100%; height: 100%; display: block;"></image-slot>
-              <span style="position: absolute; top: 12px; left: 12px; display: {{ p.saleDisplay }}; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #ffffff; background: #d92d20; padding: 6px 12px; border-radius: 999px;">{{ p.saleTag }}</span>
+              <div class="kiu-glass-bezel"></div>
             </div>
             <div style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; text-align: left; padding: 0 6px;">
               <span style="font-size: 16px; font-weight: 600; color: #1d1d1f;">{{ p.name }}</span>
               <span style="font-size: 13.5px; font-weight: 300; line-height: 1.45; color: #6e6e73;">{{ p.shortDesc }}</span>
-              <div style="display: flex; align-items: baseline; gap: 10px; margin-top: 2px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-top: 2px; flex-wrap: wrap;">
                 <span class="kiu-prod-price" style="font-size: 19px; font-weight: 700; color: #1d1d1f;">{{ p.price }}</span>
                 <span style="display: {{ p.oldDisplay }}; font-size: 14px; color: #86868b; text-decoration: line-through;">{{ p.oldPrice }}</span>
+                <span style="display: {{ p.saleDisplay }}; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #ffffff; background: #0071e3; padding: 4px 10px; border-radius: 8px;">{{ p.saleTag }}</span>
               </div>
             </div>
             </div>
@@ -403,7 +425,7 @@
             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
               <span class="kiu-det-price" style="font-size: 34px; font-weight: 500; color: #1d1d1f;">{{ detPrice }}</span>
               <span style="display: {{ detOldDisplay }}; font-size: 17px; color: #86868b; text-decoration: line-through;">{{ detOldPrice }}</span>
-              <span style="display: {{ detSaleDisplay }}; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #ffffff; background: #d92d20; padding: 5px 10px; border-radius: 999px;">{{ saleTagLabel }}</span>
+              <span style="display: {{ detSaleDisplay }}; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: #ffffff; background: #0071e3; padding: 5px 10px; border-radius: 8px;">{{ saleTagLabel }}</span>
             </div>
             <span style="font-size: 14px; font-weight: 600; color: #1d873c;">{{ detShipFree }}</span>
             <span style="font-size: 14px; font-weight: 600; color: {{ detStockColor }};">{{ detStock }}</span>
