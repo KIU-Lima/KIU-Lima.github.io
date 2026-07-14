@@ -14,14 +14,32 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
   <style>
     html { scroll-behavior: smooth; }
-    body { margin: 0; background: #ffffff; }
+    body { margin: 0; background: #ffffff; zoom: 0.9; }
     @keyframes kiuFadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
     @keyframes kiuLbBg { from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); } to { background: rgba(0,0,0,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); } }
     @keyframes kiuLbImg { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: scale(1); } }
     @keyframes kiuPress { 0% { transform: scale(1); } 45% { transform: scale(1.07); } 100% { transform: scale(0.93); } }
     /* píldoras de filtro: entrada en dominó (caen de arriba una tras otra) */
     @keyframes kiuDropIn { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
-    /* tarjetas de producto: cristal esmerilado blanco (la foto difuminada se asoma tras un velo blanco translúcido) */
+    /* tarjetas de producto: cristal con grosor aparente. El anillo de sombras internas
+       simula el bisel del vidrio (el borde "dobla" el fondo) y los degradados radiales
+       hacen de reflejo especular de un HDR que no existe en la página: una luz fría
+       arriba-izquierda y su rebote tenue abajo-derecha. */
+    .kiu-glass-rim { position: absolute; inset: 0; border-radius: 24px; pointer-events: none;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.5),
+        inset 1.5px 3px 1px -2px rgba(255,255,255,1),
+        inset -2px -3px 1px -2px rgba(255,255,255,0.85),
+        inset 0 14px 18px -14px rgba(255,255,255,0.9),
+        inset 0 -16px 20px -16px rgba(255,255,255,0.75),
+        inset 0 2px 5px -2px rgba(22,26,34,0.15),
+        inset 0 -2px 5px -3px rgba(22,26,34,0.11);
+    }
+    .kiu-glass-rim::before { content: ''; position: absolute; inset: 0; border-radius: inherit;
+      background:
+        radial-gradient(60% 34% at 18% -6%, rgba(255,255,255,0.55), rgba(255,255,255,0) 70%),
+        radial-gradient(42% 24% at 88% 106%, rgba(255,255,255,0.38), rgba(255,255,255,0) 72%);
+    }
     image-slot { display: block; width: 100%; height: 100%; }
     .kiu-hov:hover { color: #0071e3 !important; }
     .kiu-badge:hover { background: #0071e3 !important; }
@@ -77,7 +95,7 @@
   </style>
 </helmet>
 
-<div style="font-family: 'DM Sans', sans-serif; color: #1d1d1f; background: #ffffff; min-height: 100vh;">
+<div style="font-family: 'DM Sans', sans-serif; color: #1d1d1f; background: #ffffff; min-height: calc(100vh / 0.9);">
 
   <!-- PRODUCT LIFT OVERLAY -->
   <sc-if value="{{ selVisible }}" hint-placeholder-val="{{ false }}">
@@ -97,7 +115,7 @@
 
   <!-- CARRITO (selección de productos → checkout Shopify) -->
   <div onClick="{{ closeCart }}" style="position: fixed; inset: 0; z-index: 105; background: rgba(29,29,31,0.28); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: {{ cartBackdropOpacity }}; pointer-events: {{ cartBackdropPointer }}; transition: opacity 0.45s ease;"></div>
-  <aside style="position: fixed; top: 0; right: 0; bottom: 0; z-index: 110; width: 400px; max-width: 92vw; background: #ffffff; border-left: 1px solid rgba(0,0,0,0.08); box-shadow: -24px 0 70px rgba(0,0,0,0.14); transform: translateX({{ cartShift }}); transition: transform 0.55s cubic-bezier(0.33, 1, 0.5, 1); display: flex; flex-direction: column;">
+  <aside style="position: fixed; top: 0; right: 0; bottom: 0; z-index: 110; width: 400px; max-width: calc(92vw / 0.9); background: #ffffff; border-left: 1px solid rgba(0,0,0,0.08); box-shadow: -24px 0 70px rgba(0,0,0,0.14); transform: translateX({{ cartShift }}); transition: transform 0.55s cubic-bezier(0.33, 1, 0.5, 1); display: flex; flex-direction: column;">
     <div style="display: flex; align-items: center; justify-content: space-between; padding: 20px 26px; border-bottom: 1px solid rgba(0,0,0,0.08);">
       <span style="font-size: 19px; font-weight: 600; color: #1d1d1f;">{{ cartTitle }}</span>
       <button onClick="{{ closeCart }}" style="font-family: 'DM Sans', sans-serif; width: 32px; height: 32px; border: none; border-radius: 999px; background: #f5f5f7; color: #1d1d1f; font-size: 14px; cursor: pointer; transition: background 0.25s ease;" style-hover="background: rgba(0,0,0,0.1);">✕</button>
@@ -279,9 +297,7 @@
 
       <div class="kiu-prod-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 56px 48px;">
         <sc-for list="{{ products }}" as="p" hint-placeholder-count="7">
-          <article onClick="{{ p.open }}" style="grid-column: {{ p.span }}; position: relative; cursor: pointer; border-radius: 24px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: transform 0.35s cubic-bezier(0.33, 1, 0.5, 1), box-shadow 0.35s ease;" style-hover="transform: translateY(-6px); box-shadow: 0 18px 44px rgba(0,0,0,0.13);">
-            <div style="position: absolute; inset: -34px; background-image: {{ p.blurBg }}; background-size: cover; background-position: center; filter: blur(30px) saturate(1.25);"></div>
-            <div style="position: absolute; inset: 0; background: rgba(255,255,255,0.68); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);"></div>
+          <article onClick="{{ p.open }}" style="grid-column: {{ p.span }}; position: relative; cursor: pointer; border-radius: 24px; overflow: hidden; background: linear-gradient(165deg, rgba(252,252,253,0.92), rgba(240,242,246,0.72)); backdrop-filter: blur(10px) saturate(1.2); -webkit-backdrop-filter: blur(10px) saturate(1.2); box-shadow: 0 14px 34px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.05); transition: transform 0.35s cubic-bezier(0.33, 1, 0.5, 1), box-shadow 0.35s ease;" style-hover="transform: translateY(-6px); box-shadow: 0 22px 48px rgba(0,0,0,0.14), 0 3px 8px rgba(0,0,0,0.06);">
             <div style="position: relative; display: flex; flex-direction: column; gap: 14px; padding: 12px 12px 16px;">
             <div style="position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: {{ p.aspect }}; border: 1px solid rgba(0,0,0,0.08);">
               <image-slot id="{{ p.imgId }}" src="{{ p.src }}" shape="rect" placeholder="{{ p.placeholder }}" style="width: 100%; height: 100%; display: block;"></image-slot>
@@ -292,6 +308,7 @@
               <span class="kiu-prod-price" style="font-size: 15px; font-weight: 600; color: #1d1d1f;">{{ p.price }}</span>
             </div>
             </div>
+            <div class="kiu-glass-rim"></div>
           </article>
         </sc-for>
       </div>
@@ -411,7 +428,8 @@
         <!-- lightbox -->
         <sc-if value="{{ lightboxOn }}" hint-placeholder-val="{{ false }}">
           <div onClick="{{ closeLightbox }}" style="position: fixed; inset: 0; z-index: 95; background: rgba(0,0,0,0.55); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); display: flex; align-items: center; justify-content: center; cursor: zoom-out; animation: kiuLbBg 0.5s ease both;">
-            <kiu-ambient class="kiu-lb-photo" src="{{ mainSrc }}" alt="{{ detName }}" style="position: relative; width: min(1400px, 92vw); height: 86vh; animation: kiuLbImg 0.55s cubic-bezier(0.33, 1, 0.5, 1) 0.08s both;"></kiu-ambient>
+            <!-- calc(.../0.9): las unidades vw/vh se encogen con el zoom del body; esto restaura el tamaño real en pantalla -->
+            <kiu-ambient class="kiu-lb-photo" src="{{ mainSrc }}" alt="{{ detName }}" style="position: relative; width: min(1400px, calc(92vw / 0.9)); height: calc(86vh / 0.9); animation: kiuLbImg 0.55s cubic-bezier(0.33, 1, 0.5, 1) 0.08s both;"></kiu-ambient>
           </div>
         </sc-if>
 
@@ -544,21 +562,26 @@ class Component extends DCLogic {
   openProduct(prod, e) {
     // anclar la animación exactamente al marco de la foto (no a toda la tarjeta)
     const imgBox = e.currentTarget.querySelector('image-slot') || e.currentTarget;
-    const rect = (imgBox.closest && imgBox.closest('div') ? imgBox.closest('div') : imgBox).getBoundingClientRect();
+    const box = (imgBox.closest && imgBox.closest('div') ? imgBox.closest('div') : imgBox).getBoundingClientRect();
+    // getBoundingClientRect da px visuales; el overlay fijo vive dentro del body
+    // con zoom, así que se convierte todo a px de maqueta dividiendo entre el zoom.
+    const z = this.pageZoom();
+    const rect = { top: box.top / z, left: box.left / z, width: box.width / z, height: box.height / z };
     this.setState({ detSel: 0 });
     this.clearSelTimers();
     // destino: el visor principal de la página de producto (elemento compartido)
-    const vw = window.innerWidth;
+    const vw = window.innerWidth; // px reales: mismo umbral que las media queries
+    const vwL = vw / z;           // px de maqueta dentro del body escalado
     let target;
     if (vw <= 980) {
       // móvil: el visor va a ancho completo (sección 14px + tarjeta 14px) y es cuadrado
-      const w = vw - 2 * (14 + 14);
+      const w = vwL - 2 * (14 + 14);
       target = { top: 150, left: 28, w: w, h: w };
     } else {
-      const containerW = Math.min(1240, vw - 112);
+      const containerW = Math.min(1240, vwL - 112);
       target = {
         top: 178,
-        left: (vw - containerW) / 2 + 28 + 76 + 24,
+        left: (vwL - containerW) / 2 + 28 + 76 + 24,
         w: Math.max(320, containerW - 56 - 76 - 380 - 48),
         h: 540,
       };
@@ -592,6 +615,14 @@ class Component extends DCLogic {
       this.clearHash();
       this.setState({ page: 'home', product: null, white: false });
     }, 440)];
+  }
+
+  // Factor de zoom global (body { zoom: 0.9 }): getBoundingClientRect y
+  // clientX/Y devuelven px visuales, pero el layout interno usa px de maqueta.
+  // Si el navegador no soporta zoom, getComputedStyle no da número y queda 1.
+  pageZoom() {
+    const z = parseFloat(window.getComputedStyle(document.body).zoom);
+    return (isFinite(z) && z > 0) ? z : 1;
   }
 
   // Marco real de la foto dentro del visor (px relativos a la caja del visor);
@@ -898,6 +929,8 @@ class Component extends DCLogic {
     const isVideoSel = !!vidSrc && this.state.detSel === videoIdx;
     const freeByImg = { 'hero-img': true, 'prod-cuenco': true, 'prod-utensilios': true, 'prod-cesta': true, 'prod-macetero': true, 'prod-movil': true, 'prod-david-cabeza': true, 'prod-frutales': true, 'prod-abundancia': true };
     const priceNum = (p) => parseInt(String(p).replace(/[^0-9]/g, ''), 10);
+    // la portada muestra máximo 150 caracteres de descripción (la página del producto la lleva completa)
+    const clip150 = (s) => (s && s.length > 150 ? s.slice(0, 150).replace(/\s+\S*$/, '').replace(/[\s.,;:]+$/, '') + '…' : s);
     const passes = (p) => {
       const st = this.state;
       if (st.appliedCat !== 'all' && catByImg[p.imgId] !== st.appliedCat) return false;
@@ -949,8 +982,7 @@ class Component extends DCLogic {
           placeholder: placeholders[i],
           category: catByImg[imgIds[i]],
           src: coverByImg[imgIds[i]] || '',
-          blurBg: 'url("' + (coverByImg[imgIds[i]] || '') + '")',
-          shortDesc: descs[imgIds[i]],
+          shortDesc: clip150(descs[imgIds[i]]),
           open: (e) => this.openProduct({ name: p.name, price: p.price, imgId: imgIds[i], desc: descs[imgIds[i]] }, e),
         }))
         .filter((p) => passes(p))
@@ -1151,10 +1183,11 @@ class Component extends DCLogic {
       lensH: (zf ? zf.h * 0.34 : 0) + 'px',
       zoomMove: (e) => {
         if (!gal[this.state.detSel]) return; // sin lupa sobre el video o selección vacía
+        const z = this.pageZoom(); // frameRect da px de maqueta; el cursor, px visuales
         const r = e.currentTarget.getBoundingClientRect();
-        const fr = this.frameOf(e.currentTarget) || { left: 0, top: 0, width: r.width, height: r.height };
-        const x = e.clientX - r.left - fr.left;
-        const y = e.clientY - r.top - fr.top;
+        const fr = this.frameOf(e.currentTarget) || { left: 0, top: 0, width: r.width / z, height: r.height / z };
+        const x = (e.clientX - r.left) / z - fr.left;
+        const y = (e.clientY - r.top) / z - fr.top;
         if (x < 0 || y < 0 || x > fr.width || y > fr.height) {
           if (this.state.zoomOn || this.state.frameHover) this.setState({ zoomOn: false, frameHover: false });
           return;
@@ -1167,8 +1200,9 @@ class Component extends DCLogic {
         if (!gal[this.state.detSel]) return;
         const fr = this.frameOf(e.currentTarget);
         if (fr) {
+          const z = this.pageZoom(); // frameRect da px de maqueta; el clic, px visuales
           const r = e.currentTarget.getBoundingClientRect();
-          const x = e.clientX - r.left, y = e.clientY - r.top;
+          const x = (e.clientX - r.left) / z, y = (e.clientY - r.top) / z;
           if (x < fr.left || y < fr.top || x > fr.left + fr.width || y > fr.top + fr.height) return; // clic fuera de la foto
         }
         this.setState({ lightbox: true, zoomOn: false });
